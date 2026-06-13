@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rutina 20 min · Timer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0f0d;
+    --panel:#15181500;
+    --ink:#f2f4ee;
+    --muted:#8a8f84;
+    --line:#262a25;
+    --work:#c6f24e;      /* lima eléctrico */
+    --work-dim:#3a4717;
+    --rest:#4ec1f2;      /* azul calma */
+    --rest-dim:#163642;
+    --prep:#f2a23c;      /* ámbar prepárate */
+    --prep-dim:#46300f;
+    --done:#9b87f5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Sora',sans-serif;
+    overflow:hidden;
+    position:relative;
+  }
+  /* textura sutil de rejilla + grano */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:46px 46px;
+    opacity:.18;
+    mask-image:radial-gradient(ellipse at 50% 35%,#000 30%,transparent 80%);
+  }
+  #app{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;max-width:560px;margin:0 auto;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+
+  /* ---------- Pantalla inicio ---------- */
+  #start{flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px;padding:24px 4px}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--work)}
+  #start h1{font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(40px,13vw,68px);line-height:.92;text-transform:uppercase;letter-spacing:.01em}
+  #start h1 span{color:var(--work)}
+  .lead{color:var(--muted);font-size:15px;line-height:1.55;max-width:42ch}
+  .plan{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;display:flex;flex-direction:column;gap:9px}
+  .plan .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13.5px}
+  .plan .row b{font-weight:600}
+  .plan .row .n{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:12px;flex-shrink:0}
+  .total{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);padding-top:2px}
+  .total b{color:var(--ink)}
+  .btn{
+    appearance:none;border:none;cursor:pointer;font-family:'Anton',sans-serif;
+    text-transform:uppercase;letter-spacing:.06em;font-size:22px;
+    background:var(--work);color:#0d0f0d;border-radius:16px;padding:18px;width:100%;
+    transition:transform .12s ease,filter .12s ease;
+  }
+  .btn:active{transform:scale(.97);filter:brightness(1.05)}
+  .hint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;justify-content:center}
+  .sw{position:relative;width:38px;height:22px;border-radius:20px;background:var(--line);transition:.2s;flex-shrink:0}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:.2s}
+  .sw.on{background:var(--work-dim)}
+  .sw.on::after{left:19px;background:var(--work)}
+
+  /* ---------- Pantalla timer ---------- */
+  #run{flex:1;display:none;flex-direction:column;padding:8px 0 14px}
+  #run.show{display:flex}
+
+  .topbar{display:flex;align-items:center;gap:12px;padding:6px 2px 2px}
+  .phaseTag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid currentColor}
+  .topbar .blk{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-left:auto;letter-spacing:.1em}
+
+  /* barra progreso global */
+  .prog{height:4px;border-radius:4px;background:var(--line);margin:10px 2px 4px;overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:var(--work);transition:width .25s linear}
+
+  .stage{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:6px;padding:8px 2px}
+  .exName{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(30px,9vw,46px);line-height:.96;letter-spacing:.01em;transition:color .3s}
+  .setline{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:18px}
+
+  .timer{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:clamp(82px,30vw,150px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;transition:color .3s;margin:2px 0}
+
+  .instr{color:var(--ink);font-size:15px;line-height:1.5;max-width:40ch;min-height:46px;opacity:.92}
+  .instr b{color:var(--work)}
+
+  /* tempo metronome */
+  .tempo{display:none;gap:7px;align-items:center;justify-content:center;margin-top:4px;min-height:34px}
+  .tempo.show{display:flex}
+  .tempo .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
+  .tdot{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);padding:4px 9px;border:1px solid var(--line);border-radius:8px;transition:.15s}
+  .tdot.active{background:var(--work);color:#0d0f0d;border-color:var(--work);transform:translateY(-2px)}
+
+  /* siguiente */
+  .next{border-top:1px solid var(--line);padding:12px 2px 4px;display:flex;align-items:center;gap:10px}
+  .next .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .next .txt{font-size:14px;color:var(--ink);font-weight:500;text-align:right;margin-left:auto}
+  .next .txt small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:1px}
+
+  /* controles */
+  .ctrls{display:flex;gap:10px;align-items:center;padding-top:12px}
+  .cbtn{appearance:none;border:1px solid var(--line);background:#1a1d19;color:var(--ink);border-radius:14px;height:60px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .15s;flex:1}
+  .cbtn:active{transform:scale(.95)}
+  .cbtn svg{width:24px;height:24px;fill:currentColor}
+  .cbtn.play{flex:2;background:var(--work);color:#0d0f0d;border-color:var(--work)}
+  .cbtn.play.paused{background:var(--work)}
+  .cbtn.small{flex:.8}
+  .cbtn .lab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;margin-left:6px}
+
+  /* estado: descanso / prep recolorean */
+  #run.rest .timer,#run.rest .exName{color:var(--rest)}
+  #run.rest .prog i{background:var(--rest)}
+  #run.rest .phaseTag{color:var(--rest)}
+  #run.prep .timer,#run.prep .exName{color:var(--prep)}
+  #run.prep .prog i{background:var(--prep)}
+  #run.prep .phaseTag{color:var(--prep)}
+  #run.work .timer{color:var(--work)}
+  #run.work .phaseTag{color:var(--work)}
+
+  /* pantalla fin */
+  #done{flex:1;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:20px}
+  #done.show{display:flex}
+  #done .big{font-family:'Anton',sans-serif;font-size:clamp(44px,14vw,76px);text-transform:uppercase;line-height:.95;color:var(--done)}
+  #done p{color:var(--muted);max-width:36ch;line-height:1.5;font-size:15px}
+  .pulse{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .flash{animation:flash .4s ease}
+  @keyframes flash{0%{background:var(--bg)}40%{background:#1d2410}100%{background:var(--bg)}}
+
+  /* selector de modo de avance (pantalla inicio) */
+  .opt{display:flex;flex-direction:column;gap:9px}
+  .opt .ttl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .seg{display:flex;gap:6px;border:1px solid var(--line);border-radius:14px;padding:5px}
+  .seg button{flex:1;appearance:none;border:none;background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-weight:600;font-size:12.5px;padding:11px 5px;border-radius:10px;cursor:pointer;transition:.15s;line-height:1.15;text-align:center}
+  .seg button small{display:block;font-weight:400;font-size:10px;opacity:.8;margin-top:3px}
+  .seg button.sel{background:var(--work);color:#0d0f0d}
+
+  /* estado PREPÁRATE (avance manual) — recolorea en ámbar */
+  #run.ready .timer,#run.ready .exName{color:var(--prep)}
+  #run.ready .prog i{background:var(--prep)}
+  #run.ready .phaseTag{color:var(--prep)}
+  #run.ready #tempo{display:none}
+  .readyBanner{display:none;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--prep);margin-top:6px}
+  #run.ready .readyBanner{display:block;animation:pulse 1.6s ease-in-out infinite}
+  .cbtn.play.ready{background:var(--prep);color:#0d0f0d;border-color:var(--prep)}
+
+  /* vídeo anti-bloqueo: VISIBLE para el navegador (requisito para mantener
+     la pantalla encendida) pero camuflado: es del mismo color que el fondo */
+  video.nosleep{position:fixed;bottom:4px;right:4px;width:48px;height:27px;border-radius:6px;opacity:1;pointer-events:none;z-index:0}
+
+  /* estado COLÓCATE: cuenta atrás para dejar el móvil y ponerse en posición */
+  #run.lead .timer,#run.lead .exName{color:var(--prep)}
+  #run.lead .prog i{background:var(--prep)}
+  #run.lead .phaseTag{color:var(--prep)}
+  #run.lead #tempo{display:none}
+  .leadBanner{display:none;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--prep);margin-top:6px}
+  #run.lead .leadBanner{display:block;animation:pulse 1.2s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INICIO -->
+  <section id="start">
+    <div>
+      <div class="kicker">Junio · Mes 1 · con barra</div>
+      <h1>Rutina<br><span>20 min</span></h1>
+    </div>
+    <p class="lead">El timer te lleva fase por fase: calentamiento articulación por articulación, cada serie con su tempo, los descansos y siempre lo que viene después. Sigue la voz de la pantalla y no pienses en el orden.</p>
+    <div class="plan" id="planList"></div>
+    <div class="total"><span>TOTAL</span><b>20:00</b></div>
+    <div class="opt">
+      <span class="ttl">Avance entre fases</span>
+      <div class="seg" id="modeSeg">
+        <button data-mode="auto"><span>Automático</span><small>pasa solo</small></button>
+        <button data-mode="changes" class="sel"><span>Solo cambios</span><small>espera al cambiar ejercicio o pierna</small></button>
+        <button data-mode="manual"><span>Confirmar</span><small>espera antes de cada ejercicio</small></button>
+      </div>
+    </div>
+    <button class="btn" id="goBtn">▶ Empezar sesión</button>
+    <div class="hint" id="soundToggle"><span class="sw on" id="soundSw"></span> Avisos de sonido activados</div>
+  </section>
+
+  <!-- TIMER -->
+  <section id="run">
+    <div class="topbar">
+      <span class="phaseTag" id="phaseTag">TRABAJO</span>
+      <span class="blk" id="blkLabel"></span>
+    </div>
+    <div class="prog"><i id="progBar"></i></div>
+
+    <div class="stage">
+      <div class="setline" id="setLine"></div>
+      <div class="exName" id="exName">—</div>
+      <div class="timer" id="timer">00:00</div>
+      <div class="instr" id="instr"></div>
+      <div class="tempo" id="tempo">
+        <span class="lbl">TEMPO</span>
+        <span class="tdot" data-t="0">BAJA 3</span>
+        <span class="tdot" data-t="1">PAUSA 1</span>
+        <span class="tdot" data-t="2">SUBE 1</span>
+      </div>
+      <div class="readyBanner" id="readyBanner">PREPÁRATE · toca para empezar</div>
+      <div class="leadBanner" id="leadBanner">DEJA EL MÓVIL Y COLÓCATE</div>
+    </div>
+
+    <div class="next">
+      <span class="tag">Siguiente</span>
+      <span class="txt" id="nextTxt">—</span>
+    </div>
+
+    <div class="ctrls">
+      <button class="cbtn small" id="prevBtn" title="Anterior"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="cbtn play paused" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="lab" id="playLab">PLAY</span></button>
+      <button class="cbtn small" id="nextBtn" title="Saltar"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zm-2 6L5.5 6v12z"/></svg></button>
+      <button class="cbtn small" id="resetBtn" title="Reiniciar"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg></button>
+    </div>
+  </section>
+
+  <!-- FIN -->
+  <section id="done">
+    <div class="big">¡Hecho!</div>
+    <p>Sesión completa: 9 bloques en 20 minutos. Apunta en tu hoja de seguimiento el tempo limpio y cómo aguantó cada pierna.</p>
+    <button class="btn" id="restartBtn" style="max-width:300px">↺ Otra sesión</button>
+  </section>
+
+</div>
+
+<!-- vídeo silencioso en bucle: evita que la pantalla del móvil se bloquee -->
+<video class="nosleep" id="noSleepVid" muted playsinline loop preload="auto" tabindex="-1" aria-hidden="true">
+  <source type="video/mp4" src="data:video/mp4;base64,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">
+  <source type="video/webm" src="data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAX3EU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHYTbuMU6uEElTDZ1OsggEeTbuMU6uEHFO7a1OsggXh7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsirXsYMPQkBNgI1MYXZmNjAuMTYuMTAwV0GNTGF2ZjYwLjE2LjEwMESJiEDDiAAAAAAAFlSua8GuAQAAAAAAADjXgQFzxYjfRw3+kdI+dpyBACK1nIN1bmSIgQCGhVZfVlA5g4EBI+ODhAvrwgDgibCBQLqBJJqBAhJUw2dAgHNzoGPAgGfImkWjh0VOQ09ERVJEh41MYXZmNjAuMTYuMTAwc3PaY8CLY8WI30cN/pHSPnZnyKVFo4dFTkNPREVSRIeYTGF2YzYwLjMxLjEwMiBsaWJ2cHgtdnA5Z8ihRaOIRFVSQVRJT05Eh5MwMDowMDoxMC4wMDAwMDAwMDAAH0O2dUI154EAo6OBAACAgkmDQgAD8AI2ADgkHBhKAAAwYAAAF3///0fVgAAAAKOTgQDIAIYAQJKcAFAAAAMgAABUcKOTgQGQAIYAQJKcAE7gAAMgAABUcKOTgQJYAIYAQJKcAFAAAAMgAABUcKOTgQMgAIYAQJKcAE1AAAMgAABUcKOTgQPoAIYAQJKcAFAAAAMgAABUcKOTgQSwAIYAQJKcAE7gAAMgAABUcKOTgQV4AIYAQJKcAFAAAAMgAABUcKOTgQZAAIYAQJKcAEogAAMgAABUcKOTgQcIAIYAQJKcAFAAAAMgAABUcKOTgQfQAIYAwJKcAEogAAMgAABUcKOTgQiYAIYAQJKcAFAAAAMgAABUcKOTgQlgAIYAQJKcAE1AAAMgAABUcKOTgQooAIYAQJKcAFAAAAMgAABUcKOTgQrwAIYAQJKcAE7gAAMgAABUcKOTgQu4AIYAQJKcAFAAAAMgAABUcKOTgQyAAIYAQJKcAEogAAMgAABUcKOTgQ1IAIYAQJKcAFAAAAMgAABUcKOTgQ4QAIYAQJKcAE7gAAMgAABUcKOTgQ7YAIYAQJKcAFAAAAMgAABUcKOTgQ+gAIYAwJKcAEogAAMgAABUcKOTgRBoAIYAQJKcAFAAAAMgAABUcKOTgREwAIYAQJKcAE7gAAMgAABUcKOTgRH4AIYAQJKcAFAAAAMgAABUcKOTgRLAAIYAQJKcAEogAAMgAABUcKOTgROIAIYAQJKcAFAAAAMgAABUcB9DtnVB/OeCFFCjk4EAAACGAECSnABO4AADIAAAVHCjk4EAyACGAECSnABQAAADIAAAVHCjk4EBkACGAECSnABNQAADIAAAVHCjk4ECWACGAECSnABQAAADIAAAVHCjk4EDIACGAMCSnABKIAADIAAAVHCjk4ED6ACGAECSnABQAAADIAAAVHCjk4EEsACGAECSnABKIAADIAAAVHCjk4EFeACGAECSnABQAAADIAAAVHCjk4EGQACGAECSnABO4AADIAAAVHCjk4EHCACGAECSnABQAAADIAAAVHCjk4EH0ACGAECSnABNQAADIAAAVHCjk4EImACGAECSnABQAAADIAAAVHCjk4EJYACGAECSnABO4AADIAAAVHCjk4EKKACGAECSnABQAAADIAAAVHCjk4EK8ACGAMCSnABKIAADIAAAVHCjk4ELuACGAECSnABQAAADIAAAVHCjk4EMgACGAECSnABO4AADIAAAVHCjk4ENSACGAECSnABQAAADIAAAVHCjk4EOEACGAECSnABNQAADIAAAVHCjk4EO2ACGAECSnABQAAADIAAAVHCjk4EPoACGAECSnABO4AADIAAAVHCjk4EQaACGAECSnABQAAADIAAAVHCjk4ERMACGAECSnABKIAADIAAAVHCjk4ER+ACGAECSnABQAAADIAAAVHAcU7trkbuPs4EAt4r3gQHxggGk8IED">
+</video>
+
+<script>
+/* ============ DEFINICIÓN DE LA SESIÓN ============ */
+/* type: prep (calentamiento/movilidad) | work | rest
+   tempo:true muestra el metrónomo 3-1-1-0 durante la serie */
+
+const W = 'work', R = 'rest', P = 'prep';
+
+const phases = [
+  // 1. MOVILIDAD DINÁMICA — articulación por articulación (60s)
+  {block:'1 · Calentamiento', name:'Cuello',   t:10, type:P, instr:'Gira la cabeza en <b>círculos lentos y suaves</b>. 5s en un sentido, 5s en el otro. Sin forzar el cuello.'},
+  {block:'1 · Calentamiento', name:'Hombros',  t:10, type:P, instr:'Círculos amplios con los hombros: 5s hacia atrás, 5s hacia delante. Brazos sueltos.'},
+  {block:'1 · Calentamiento', name:'Muñecas',  t:10, type:P, instr:'Entrelaza los dedos y <b>gira las muñecas</b> en círculo; luego abre y cierra los puños. Despiértalas bien: aguantarán peso en flexiones y dominadas.'},
+  {block:'1 · Calentamiento', name:'Cadera',   t:10, type:P, instr:'Manos en la cadera, dibuja <b>círculos grandes con la pelvis</b>. 5s cada sentido.'},
+  {block:'1 · Calentamiento', name:'Rodillas', t:10, type:P, instr:'Pies juntos, manos en las rodillas, círculos suaves. Termina con 2-3 semi-sentadillas sin bajar del todo.'},
+  {block:'1 · Calentamiento', name:'Tobillos', t:10, type:P, instr:'Apoya la punta de un pie y <b>gira el tobillo</b> 5s; cambia de pie.'},
+
+  // 2. BEAR CRAWL (30s)
+  {block:'2 · Calentamiento', name:'Bear crawl', lead:5, t:30, type:P, instr:'A cuatro patas, manos bajo los hombros, <b>rodillas flotando 1-2 cm</b>, espalda plana. Avanza mano derecha + pie izquierdo a la vez, luego al revés. <b>10 pasos adelante, 10 atrás</b>. Sin balancear la cadera.'},
+
+  // 3. FLEXIONES 3×6, tempo 3-1-1-0, desc 60s
+  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 1/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Plancha recta, manos algo más anchas que los hombros. Baja el pecho a ~5 cm en <b>3s</b>, pausa 1s, sube en 1s. <b>Codos cerca del cuerpo</b>.'},
+  {block:'3 · Bloque A — Flexiones', name:'Descanso', t:60, type:R, instr:'Sacude brazos y muñecas. <b>Abre el pecho</b>: entrelaza las manos en la espalda y estira 10s. Quedan 2 series.'},
+  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 2/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mismo tempo. Si pierdes la forma, las últimas en la <b>mesa</b> (regresión) cuentan.'},
+  {block:'3 · Bloque A — Flexiones', name:'Descanso', t:60, type:R, instr:'<b>Estira las muñecas</b>: brazo estirado, palma arriba, tira suave de los dedos 10s por mano. Última serie a continuación.'},
+  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 3/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mantén la <b>cadera firme</b>, ni hundida ni levantada. ROM completo.'},
+
+  // 4. BÚLGARA 2×8/pierna, desc 60s (entre series)
+  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S1 · Pierna DERECHA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Empeine de atrás (izquierdo) sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s hasta muslo paralelo, pausa 1s, sube en 1s.'},
+  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S1 · Pierna IZQUIERDA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Cambia: empeine derecho sobre la silla, peso en la <b>pierna izquierda</b>. Mismo tempo 3-1-1-0.'},
+  {block:'4 · Bloque B — Búlgara', name:'Descanso', t:60, type:R, instr:'Camina unos pasos y <b>sacude las piernas</b>. Cuádriceps: talón al glúteo 8s por pierna. Quedan 8+8 (regresión: sentadilla normal).'},
+  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S2 · Pierna DERECHA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Otra vez <b>pierna derecha</b>. Rodilla apuntando hacia el dedo gordo, sin irse hacia dentro.'},
+  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S2 · Pierna IZQUIERDA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Última de búlgara: <b>pierna izquierda</b>. Controla la bajada de 3s.'},
+
+  // 5. PIKE PUSH-UP 2×6, desc 60s
+  {block:'5 · Bloque C — Pike push-up', name:'Pike push-up · Serie 1/2', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Como una flexión pero con la <b>cadera muy alta (V invertida)</b>. Baja la cabeza hacia el suelo en 3s. El peso va a los hombros.'},
+  {block:'5 · Bloque C — Pike push-up', name:'Descanso', t:60, type:R, instr:'<b>Círculos de hombros</b> hacia atrás y brazos sueltos. Cuello: oreja al hombro 5s por lado. Una serie más (regresión: manos en la mesa).'},
+  {block:'5 · Bloque C — Pike push-up', name:'Pike push-up · Serie 2/2', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mantén los codos apuntando hacia atrás, no en cruz. Cabeza entre las manos.'},
+
+  // 6. SINGLE-LEG RDL 2×8/pierna, desc 60s
+  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S1 · Pierna DERECHA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, la izquierda se extiende atrás. Espalda recta hasta notar el isquio. Manos en la cadera.'},
+  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S1 · Pierna IZQUIERDA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Cambia a la <b>pierna izquierda</b>. Movimiento lento y controlado, sin redondear la espalda.'},
+  {block:'6 · Bloque D — Single-leg RDL', name:'Descanso', t:60, type:R, instr:'Camina y <b>afloja la cadera</b> con círculos. Balancea cada pierna adelante-atrás 8s para soltar el isquio. Serie 2 (regresión: RDL a dos piernas).'},
+  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S2 · Pierna DERECHA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Otra vez <b>pierna derecha</b>. Cadera hacia atrás, no es una sentadilla.'},
+  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S2 · Pierna IZQUIERDA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Última: <b>pierna izquierda</b>. Equilibrio y control mandan sobre la velocidad.'},
+
+  // 7. NEGATIVA DE DOMINADA 3×3, desc 75s, bajada 4-5s
+  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 1/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'<b>Comprueba la barra</b> antes de colgarte. Salta hasta arriba (barbilla sobre la barra) y baja <b>lo más lento posible (4-5s)</b> hasta brazos estirados. La subida no cuenta.'},
+  {block:'7 · Bloque E — Negativa dominada', name:'Descanso', t:75, type:R, instr:'<b>Estira los antebrazos</b>: palma arriba, tira suave de los dedos 10s por lado, y sacude las manos. Si la barra resbala, sécala. Quedan 2 series.'},
+  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 2/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'Baja <b>controlando todo el recorrido</b>. Regresión válida: bajada de 3s si 4-5s es imposible.'},
+  {block:'7 · Bloque E — Negativa dominada', name:'Descanso', t:75, type:R, instr:'Brazos colgando y <b>abre-cierra las manos</b> para soltar el agarre. Hombros: círculos atrás. Última serie de negativas.'},
+  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 3/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'Aprieta el dorsal al frenar la bajada. Hombros lejos de las orejas.'},
+
+  // 8. HOLLOW BODY HOLD 2×20s, desc 30s
+  {block:'8 · Bloque F — Hollow', name:'Hollow body · 1/2', lead:5, t:20, type:W, set:'aguanta 20 s', instr:'Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b> todo el rato. Regresión: rodillas flexionadas (tuck).'},
+  {block:'8 · Bloque F — Hollow', name:'Descanso', t:30, type:R, instr:'<b>Rodillas al pecho</b> y balancea suave para soltar la lumbar. Respira hondo. Una repetición más.'},
+  {block:'8 · Bloque F — Hollow', name:'Hollow body · 2/2', lead:5, t:20, type:W, set:'aguanta 20 s', instr:'Respira sin soltar la zona media. Si se despega la lumbar, pasa a tuck.'},
+
+  // 9. VUELTA A LA CALMA — estiramientos 15s × 3
+  {block:'9 · Vuelta a la calma', name:'Estiramiento · Pectoral', lead:3, t:15, type:P, instr:'Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Aguanta sin rebotes.'},
+  {block:'9 · Vuelta a la calma', name:'Estiramiento · Flexor de cadera', lead:3, t:15, type:P, instr:'Zancada con la <b>rodilla de atrás en el suelo</b>, empuja la cadera hacia delante. Cambia de pierna a mitad si quieres.'},
+  {block:'9 · Vuelta a la calma', name:'Estiramiento · Isquios', lead:3, t:15, type:P, instr:'Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave.'},
+];
+
+/* etiqueta de fase visible */
+const phaseLabel = {work:'TRABAJO', rest:'DESCANSO', prep:'PREPARA'};
+
+/* total y resumen para la pantalla de inicio */
+const totalSecs = phases.reduce((a,p)=>a+p.t,0);
+const planRows = [
+  ['Calentamiento + movilidad','1:30'],
+  ['Flexiones 3×6','3:30'],
+  ['Búlgara 2×8/pierna','3:40'],
+  ['Pike push-up 2×6','2:00'],
+  ['Single-leg RDL 2×8/pierna','3:40'],
+  ['Negativa dominada 3×3','3:45'],
+  ['Hollow body 2×20s','1:10'],
+  ['Vuelta a la calma','0:45'],
+];
+const planEl = document.getElementById('planList');
+planRows.forEach((r,i)=>{
+  const d=document.createElement('div');d.className='row';
+  d.innerHTML=`<b>${i+1}. ${r[0]}</b><span class="n">${r[1]}</span>`;
+  planEl.appendChild(d);
+});
+
+/* ============ ESTADO ============ */
+let idx = 0;
+let remaining = phases[0].t;
+let running = false;
+let ticker = null;
+let soundOn = true;
+let lastTempoPhase = -1;   // última fase del ciclo de tempo sonada (0 baja, 1 pausa, 2 sube)
+let mode = 'changes';      // 'auto' | 'changes' | 'manual'
+let isReady = false;       // true = en pantalla "prepárate", esperando confirmación
+let leadRemaining = 0;     // cuenta atrás de "colócate" antes de un ejercicio
+
+/* ============ AUDIO (WebAudio, sin archivos) ============ */
+let actx = null;
+function ensureAudio(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(actx&&actx.state==='suspended')actx.resume(); }
+function beep(freq=880, dur=0.12, type='sine', vol=0.25){
+  if(!soundOn||!actx)return;
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type=type;o.frequency.value=freq;
+  o.connect(g);g.connect(actx.destination);
+  const t=actx.currentTime;
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.start(t);o.stop(t+dur);
+}
+const sCount = ()=>beep(660,0.09,'triangle',0.22);          // tic cuenta atrás
+const sWork  = ()=>{beep(523,0.12,'square',0.28);setTimeout(()=>beep(1046,0.18,'square',0.3),120);}; // empieza trabajo
+const sRest  = ()=>{beep(440,0.16,'sine',0.26);};            // empieza descanso
+const sPrep  = ()=>{beep(587,0.14,'sine',0.24);};            // prepárate
+const sDone  = ()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.25,'triangle',0.3),i*160));};
+/* metrónomo de tempo: un sonido por fase de la rep (3-1-1-0) */
+const sBaja  = ()=>beep(392,0.10,'triangle',0.24);   // grave: empieza la BAJADA (nueva rep)
+const sPausa = ()=>beep(587,0.07,'square',0.22);      // seco: PAUSA abajo (a los 3 s)
+const sSube  = ()=>beep(880,0.11,'sawtooth',0.26);    // agudo: ¡SUBE! (al segundo siguiente)
+const sReady = ()=>{beep(659,0.14,'sine',0.26);setTimeout(()=>beep(988,0.18,'sine',0.26),160);}; // prepárate (avance manual)
+
+/* ============ DOM ============ */
+const $ = id=>document.getElementById(id);
+const elStart=$('start'), elRun=$('run'), elDone=$('done');
+const elPhaseTag=$('phaseTag'), elBlk=$('blkLabel'), elProg=$('progBar');
+const elSet=$('setLine'), elName=$('exName'), elTimer=$('timer'), elInstr=$('instr');
+const elTempo=$('tempo'), elNext=$('nextTxt');
+const elPlayBtn=$('playBtn'), elPlayIcon=$('playIcon'), elPlayLab=$('playLab');
+const tdots=[...document.querySelectorAll('.tdot')];
+
+const ICON_PLAY='<path d="M8 5v14l11-7z"/>';
+const ICON_PAUSE='<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
+
+function fmt(s){const m=Math.floor(s/60),x=s%60;return `${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`;}
+
+function elapsedBefore(i){let s=0;for(let k=0;k<i;k++)s+=phases[k].t;return s;}
+
+function render(){
+  const p=phases[idx];
+  elRun.classList.remove('work','rest','prep');
+  elRun.classList.add(p.type);
+  elPhaseTag.textContent=phaseLabel[p.type];
+  elBlk.textContent=p.block.toUpperCase();
+  elName.textContent=p.name;
+  elSet.textContent=p.set?p.set:'';
+  elInstr.innerHTML=p.instr;
+  elTimer.textContent=fmt(remaining);
+  // tempo metronomo
+  if(p.tempo){elTempo.classList.add('show');lastTempoPhase=0;tdots.forEach(d=>d.classList.toggle('active',+d.dataset.t===0));}
+  else{elTempo.classList.remove('show');tdots.forEach(d=>d.classList.remove('active'));lastTempoPhase=-1;}
+  // siguiente
+  const nx=phases[idx+1];
+  if(nx){elNext.innerHTML=`${nx.name}<small>${nx.set?nx.set:phaseLabel[nx.type]}</small>`;}
+  else{elNext.innerHTML=`Fin de la sesión<small>vuelta a la calma terminada</small>`;}
+  // progreso global
+  const done=elapsedBefore(idx)+(phases[idx].t-remaining);
+  elProg.style.width=(done/totalSecs*100).toFixed(1)+'%';
+}
+
+/* metrónomo tempo 3-1-1-0 (ciclo de 5s) durante series con tempo */
+function updateTempo(){
+  const p=phases[idx];
+  if(!p.tempo)return;
+  // posición dentro del ciclo de 5s, contando desde el inicio de la fase
+  const into=(p.t-remaining)%5; // 0..4
+  let phaseT=0;
+  if(into<3)phaseT=0;      // baja (3s)
+  else if(into<4)phaseT=1; // pausa (1s)
+  else phaseT=2;           // sube (1s)
+  tdots.forEach(d=>d.classList.toggle('active', +d.dataset.t===phaseT));
+  // aviso sonoro al cambiar de fase del tempo
+  if(phaseT!==lastTempoPhase){
+    if(phaseT===0)sBaja();        // nueva rep: a bajar
+    else if(phaseT===1)sPausa();  // 3 s cumplidos: pausa abajo
+    else sSube();                 // 1 s de pausa: ¡sube!
+    if(navigator.vibrate)navigator.vibrate(phaseT===2?25:15);
+    lastTempoPhase=phaseT;
+  }
+}
+
+function announce(p){
+  if(p.type===W)sWork();
+  else if(p.type===R)sRest();
+  else sPrep();
+}
+
+/* ¿hay que esperar confirmación antes de entrar en la fase 'to'? */
+function isLeg(p){return /DERECHA|IZQUIERDA/.test(p.name);}
+function shouldConfirm(from,to){
+  if(phases[to].type===R)return false;              // a descansar se pasa SIEMPRE solo
+  if(mode==='auto')return false;
+  if(mode==='manual')return true;
+  // mode 'changes': parar al cambiar de ejercicio o al cambiar de pierna
+  const a=phases[from], b=phases[to];
+  if(a.block!==b.block)return true;                 // nuevo ejercicio / bloque
+  if(isLeg(a)&&isLeg(b)&&a.name!==b.name)return true; // cambio de pierna directo
+  return false;
+}
+
+/* arranca la fase actual: si el ejercicio tiene 'lead', primero una cuenta
+   atrás de COLÓCATE para dejar el móvil y ponerse en posición */
+function startLeadOrAnnounce(){
+  const p=phases[idx];
+  if(p.lead && p.lead>0){
+    leadRemaining=p.lead;
+    elRun.classList.add('lead');
+    elPhaseTag.textContent='COLÓCATE';
+    elTimer.textContent=fmt(leadRemaining);
+    sPrep();
+    if(navigator.vibrate)navigator.vibrate(40);
+  } else {
+    announce(p);
+    if(navigator.vibrate)navigator.vibrate(p.type===W?[60,40,60]:30);
+  }
+}
+function endLead(){
+  leadRemaining=0;
+  elRun.classList.remove('lead');
+  elPhaseTag.textContent=phaseLabel[phases[idx].type];
+  elTimer.textContent=fmt(remaining);
+  announce(phases[idx]);
+  if(navigator.vibrate)navigator.vibrate([60,40,60]);
+}
+
+/* entra en estado "prepárate": congela la fase y espera al usuario */
+function enterReady(){
+  pause();
+  isReady=true;
+  elRun.classList.add('ready');
+  elPhaseTag.textContent='PREPÁRATE';
+  elTimer.classList.remove('pulse');
+  elPlayBtn.classList.add('ready');
+  elPlayIcon.innerHTML=ICON_PLAY;
+  elPlayLab.textContent='EMPEZAR';
+  sReady();
+  if(navigator.vibrate)navigator.vibrate([120,80,120]);
+}
+
+function tick(){
+  // fase de COLÓCATE: cuenta atrás previa al ejercicio
+  if(leadRemaining>0){
+    leadRemaining--;
+    if(leadRemaining<=0){ endLead(); return; }
+    elTimer.textContent=fmt(leadRemaining);
+    if(leadRemaining<=3)sCount();
+    return;
+  }
+  remaining--;
+  if(remaining<=0){
+    // avance de fase
+    if(idx>=phases.length-1){ finish(); return; }
+    const from=idx;
+    idx++;
+    remaining=phases[idx].t;
+    render();
+    if(shouldConfirm(from,idx)){
+      enterReady();
+    } else {
+      startLeadOrAnnounce();
+    }
+    return;
+  }
+  elTimer.textContent=fmt(remaining);
+  const done=elapsedBefore(idx)+(phases[idx].t-remaining);
+  elProg.style.width=(done/totalSecs*100).toFixed(1)+'%';
+  updateTempo();
+  // cuenta atrás últimos 3s (en fases con tempo manda el metrónomo)
+  if(remaining<=3 && remaining>0){ if(!phases[idx].tempo)sCount(); elTimer.classList.add('pulse'); }
+  else { elTimer.classList.remove('pulse'); }
+}
+
+function play(){
+  ensureAudio();
+  if(running)return;
+  if(isReady){ // salimos de "prepárate" y arrancamos la fase
+    isReady=false;
+    elRun.classList.remove('ready');
+    elPlayBtn.classList.remove('ready');
+    elPhaseTag.textContent=phaseLabel[phases[idx].type];
+  }
+  running=true;
+  keepAwake();
+  elPlayIcon.innerHTML=ICON_PAUSE;elPlayLab.textContent='PAUSA';
+  elPlayBtn.classList.remove('paused');
+  // si arranca justo al inicio de una fase (y no en mitad de un colócate), lánzala
+  if(leadRemaining===0 && remaining===phases[idx].t)startLeadOrAnnounce();
+  ticker=setInterval(tick,1000);
+}
+function pause(){
+  running=false;
+  clearInterval(ticker);
+  elPlayIcon.innerHTML=ICON_PLAY;elPlayLab.textContent='SIGUE';
+  elPlayBtn.classList.add('paused');
+}
+function toggle(){running?pause():play();}
+
+function goto(i){
+  i=Math.max(0,Math.min(phases.length-1,i));
+  if(isReady){isReady=false;elRun.classList.remove('ready');elPlayBtn.classList.remove('ready');}
+  leadRemaining=0;elRun.classList.remove('lead');
+  idx=i;remaining=phases[idx].t;render();
+  elTimer.classList.remove('pulse');
+  if(running)startLeadOrAnnounce();
+  else{elPlayIcon.innerHTML=ICON_PLAY;elPlayLab.textContent='SIGUE';elPhaseTag.textContent=phaseLabel[phases[idx].type];}
+}
+
+function startSession(){
+  elStart.style.display='none';
+  elDone.classList.remove('show');
+  elRun.classList.remove('ready','lead');isReady=false;leadRemaining=0;
+  elRun.classList.add('show');
+  idx=0;remaining=phases[0].t;render();
+  ensureAudio();
+  play();
+}
+function finish(){
+  pause();
+  releaseWake();
+  elRun.classList.remove('show','ready','lead');isReady=false;leadRemaining=0;
+  elDone.classList.add('show');
+  sDone();
+  if(navigator.vibrate)navigator.vibrate([100,60,100,60,200]);
+}
+function reset(){
+  pause();releaseWake();idx=0;remaining=phases[0].t;
+  isReady=false;leadRemaining=0;
+  elRun.classList.remove('show','ready','lead');
+  elDone.classList.remove('show');
+  elStart.style.display='flex';
+}
+
+/* ============ EVENTOS ============ */
+$('goBtn').onclick=startSession;
+$('restartBtn').onclick=startSession;
+elPlayBtn.onclick=toggle;
+$('prevBtn').onclick=()=>{ if(remaining < phases[idx].t-1) goto(idx); else goto(idx-1); }; // 1ª pulsación reinicia fase, 2ª va atrás
+$('nextBtn').onclick=()=>{ if(idx>=phases.length-1)finish(); else goto(idx+1); };
+$('resetBtn').onclick=reset;
+
+$('soundToggle').onclick=()=>{
+  soundOn=!soundOn;
+  $('soundSw').classList.toggle('on',soundOn);
+  $('soundToggle').lastChild.textContent=soundOn?' Avisos de sonido activados':' Avisos de sonido silenciados';
+  if(soundOn){ensureAudio();beep(880,0.1);}
+};
+
+/* selector de modo de avance */
+$('modeSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{
+    mode=b.dataset.mode;
+    $('modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
+  };
+});
+
+/* tocar el escenario continúa cuando estás en "prepárate" */
+document.querySelector('.stage').addEventListener('click',()=>{ if(isReady)play(); });
+
+/* teclado: barra espaciadora = play/pausa, flechas = saltar */
+document.addEventListener('keydown',e=>{
+  if(!elRun.classList.contains('show'))return;
+  if(e.code==='Space'){e.preventDefault();toggle();}
+  if(e.code==='ArrowRight')goto(idx+1);
+  if(e.code==='ArrowLeft')goto(idx-1);
+});
+
+/* ====== MANTENER LA PANTALLA ENCENDIDA ======
+   Triple estrategia:
+   1. Wake Lock API (navegadores modernos).
+   2. Vídeo mudo en bucle, VISIBLE (48×27 px abajo a la derecha) pero del
+      mismo color que el fondo: los navegadores ignoran vídeos ocultos,
+      por eso el truco anterior fallaba.
+   3. Seek periódico tipo NoSleep + reintento si el sistema pausa el vídeo. */
+let wakeLock=null;
+const noSleepVid=$('noSleepVid');
+let wakeActive=false;
+async function acquireWake(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock=await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release',()=>{ if(wakeActive)acquireWake(); });
+    }
+  }catch(e){}
+}
+function playVid(){
+  try{ const pr=noSleepVid.play(); if(pr&&pr.catch)pr.catch(()=>{}); }catch(e){}
+}
+function releaseWake(){
+  wakeActive=false;
+  try{ if(wakeLock){wakeLock.release();wakeLock=null;} }catch(e){}
+  try{ noSleepVid.pause(); }catch(e){}
+}
+function keepAwake(){
+  wakeActive=true;
+  acquireWake();
+  playVid();
+}
+// truco NoSleep: re-anclar el vídeo al principio para que el navegador
+// lo considere "en reproducción activa" de forma continua
+noSleepVid.addEventListener('timeupdate',()=>{
+  if(noSleepVid.currentTime>8){ try{noSleepVid.currentTime=1;}catch(e){} }
+});
+// si el sistema pausa el vídeo (p. ej. al volver del bloqueo), relánzalo
+noSleepVid.addEventListener('pause',()=>{ if(wakeActive)playVid(); });
+// al volver a primer plano, re-pide todo
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible' && wakeActive) keepAwake();
+});
+// cualquier toque en la app mientras está activa re-asegura el vídeo
+// (los navegadores dan más permiso tras un gesto del usuario)
+document.addEventListener('touchend',()=>{ if(wakeActive)playVid(); },{passive:true});
+$('goBtn').addEventListener('click',keepAwake);
+$('restartBtn').addEventListener('click',keepAwake);
+
+render();
+</script>
+</body>
+</html>
