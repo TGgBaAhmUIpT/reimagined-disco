@@ -168,12 +168,12 @@
   <!-- INICIO -->
   <section id="start">
     <div>
-      <div class="kicker">Junio · Mes 1 · con barra</div>
-      <h1>Rutina<br><span>20 min</span></h1>
+      <div class="kicker">Mes 2 · dominada completa</div>
+      <h1>Rutina<br><span>20:45</span></h1>
     </div>
     <p class="lead">El timer te lleva fase por fase: calentamiento articulación por articulación, cada serie con su tempo, los descansos y siempre lo que viene después. Sigue la voz de la pantalla y no pienses en el orden.</p>
     <div class="plan" id="planList"></div>
-    <div class="total"><span>TOTAL</span><b>20:00</b></div>
+    <div class="total"><span>TOTAL</span><b>20:45</b></div>
     <div class="opt">
       <span class="ttl">Avance entre fases</span>
       <div class="seg" id="modeSeg">
@@ -201,9 +201,6 @@
       <div class="instr" id="instr"></div>
       <div class="tempo" id="tempo">
         <span class="lbl">TEMPO</span>
-        <span class="tdot" data-t="0">BAJA 3</span>
-        <span class="tdot" data-t="1">PAUSA 1</span>
-        <span class="tdot" data-t="2">SUBE 1</span>
       </div>
       <div class="readyBanner" id="readyBanner">PREPÁRATE · toca para empezar</div>
       <div class="leadBanner" id="leadBanner">DEJA EL MÓVIL Y COLÓCATE</div>
@@ -225,7 +222,7 @@
   <!-- FIN -->
   <section id="done">
     <div class="big">¡Hecho!</div>
-    <p>Sesión completa: 9 bloques en 20 minutos. Apunta en tu hoja de seguimiento el tempo limpio y cómo aguantó cada pierna.</p>
+    <p>Sesión completa: 9 bloques en ~21 minutos. Apunta en tu hoja de seguimiento cuántas dominadas estrictas y limpias salieron en cada serie.</p>
     <button class="btn" id="restartBtn" style="max-width:300px">↺ Otra sesión</button>
   </section>
 
@@ -240,64 +237,48 @@
 <script>
 /* ============ DEFINICIÓN DE LA SESIÓN ============ */
 /* type: prep (calentamiento/movilidad) | work | rest
-   tempo:true muestra el metrónomo 3-1-1-0 durante la serie */
+   tempo: [bajada, pausaAbajo, subida, pausaArriba] en segundos (true = 3-1-1-0)
+          muestra y suena el metrónomo durante la serie */
 
 const W = 'work', R = 'rest', P = 'prep';
 
 const phases = [
-  // 1. MOVILIDAD DINÁMICA — articulación por articulación (60s)
-  {block:'1 · Calentamiento', name:'Cuello',   t:10, type:P, instr:'Gira la cabeza en <b>círculos lentos y suaves</b>. 5s en un sentido, 5s en el otro. Sin forzar el cuello.'},
-  {block:'1 · Calentamiento', name:'Hombros',  t:10, type:P, instr:'Círculos amplios con los hombros: 5s hacia atrás, 5s hacia delante. Brazos sueltos.'},
-  {block:'1 · Calentamiento', name:'Muñecas',  t:10, type:P, instr:'Entrelaza los dedos y <b>gira las muñecas</b> en círculo; luego abre y cierra los puños. Despiértalas bien: aguantarán peso en flexiones y dominadas.'},
-  {block:'1 · Calentamiento', name:'Cadera',   t:10, type:P, instr:'Manos en la cadera, dibuja <b>círculos grandes con la pelvis</b>. 5s cada sentido.'},
-  {block:'1 · Calentamiento', name:'Rodillas', t:10, type:P, instr:'Pies juntos, manos en las rodillas, círculos suaves. Termina con 2-3 semi-sentadillas sin bajar del todo.'},
-  {block:'1 · Calentamiento', name:'Tobillos', t:10, type:P, instr:'Apoya la punta de un pie y <b>gira el tobillo</b> 5s; cambia de pie.'},
-
-  // 2. BEAR CRAWL (30s)
-  {block:'2 · Calentamiento', name:'Bear crawl', lead:5, t:30, type:P, instr:'A cuatro patas, manos bajo los hombros, <b>rodillas flotando 1-2 cm</b>, espalda plana. Avanza mano derecha + pie izquierdo a la vez, luego al revés. <b>10 pasos adelante, 10 atrás</b>. Sin balancear la cadera.'},
-
-  // 3. FLEXIONES 3×6, tempo 3-1-1-0, desc 60s
-  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 1/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Plancha recta, manos algo más anchas que los hombros. Baja el pecho a ~5 cm en <b>3s</b>, pausa 1s, sube en 1s. <b>Codos cerca del cuerpo</b>.'},
-  {block:'3 · Bloque A — Flexiones', name:'Descanso', t:60, type:R, instr:'Sacude brazos y muñecas. <b>Abre el pecho</b>: entrelaza las manos en la espalda y estira 10s. Quedan 2 series.'},
-  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 2/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mismo tempo. Si pierdes la forma, las últimas en la <b>mesa</b> (regresión) cuentan.'},
-  {block:'3 · Bloque A — Flexiones', name:'Descanso', t:60, type:R, instr:'<b>Estira las muñecas</b>: brazo estirado, palma arriba, tira suave de los dedos 10s por mano. Última serie a continuación.'},
-  {block:'3 · Bloque A — Flexiones', name:'Flexiones · Serie 3/3', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mantén la <b>cadera firme</b>, ni hundida ni levantada. ROM completo.'},
-
-  // 4. BÚLGARA 2×8/pierna, desc 60s (entre series)
-  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S1 · Pierna DERECHA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Empeine de atrás (izquierdo) sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s hasta muslo paralelo, pausa 1s, sube en 1s.'},
-  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S1 · Pierna IZQUIERDA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Cambia: empeine derecho sobre la silla, peso en la <b>pierna izquierda</b>. Mismo tempo 3-1-1-0.'},
-  {block:'4 · Bloque B — Búlgara', name:'Descanso', t:60, type:R, instr:'Camina unos pasos y <b>sacude las piernas</b>. Cuádriceps: talón al glúteo 8s por pierna. Quedan 8+8 (regresión: sentadilla normal).'},
-  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S2 · Pierna DERECHA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Otra vez <b>pierna derecha</b>. Rodilla apuntando hacia el dedo gordo, sin irse hacia dentro.'},
-  {block:'4 · Bloque B — Búlgara', name:'Búlgara · S2 · Pierna IZQUIERDA', lead:4, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Última de búlgara: <b>pierna izquierda</b>. Controla la bajada de 3s.'},
-
-  // 5. PIKE PUSH-UP 2×6, desc 60s
-  {block:'5 · Bloque C — Pike push-up', name:'Pike push-up · Serie 1/2', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Como una flexión pero con la <b>cadera muy alta (V invertida)</b>. Baja la cabeza hacia el suelo en 3s. El peso va a los hombros.'},
-  {block:'5 · Bloque C — Pike push-up', name:'Descanso', t:60, type:R, instr:'<b>Círculos de hombros</b> hacia atrás y brazos sueltos. Cuello: oreja al hombro 5s por lado. Una serie más (regresión: manos en la mesa).'},
-  {block:'5 · Bloque C — Pike push-up', name:'Pike push-up · Serie 2/2', lead:5, t:30, type:W, tempo:true, set:'6 reps · tempo 3-1-1-0', instr:'Mantén los codos apuntando hacia atrás, no en cruz. Cabeza entre las manos.'},
-
-  // 6. SINGLE-LEG RDL 2×8/pierna, desc 60s
-  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S1 · Pierna DERECHA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, la izquierda se extiende atrás. Espalda recta hasta notar el isquio. Manos en la cadera.'},
-  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S1 · Pierna IZQUIERDA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Cambia a la <b>pierna izquierda</b>. Movimiento lento y controlado, sin redondear la espalda.'},
-  {block:'6 · Bloque D — Single-leg RDL', name:'Descanso', t:60, type:R, instr:'Camina y <b>afloja la cadera</b> con círculos. Balancea cada pierna adelante-atrás 8s para soltar el isquio. Serie 2 (regresión: RDL a dos piernas).'},
-  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S2 · Pierna DERECHA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna derecha', instr:'Otra vez <b>pierna derecha</b>. Cadera hacia atrás, no es una sentadilla.'},
-  {block:'6 · Bloque D — Single-leg RDL', name:'SL-RDL · S2 · Pierna IZQUIERDA', lead:3, t:40, type:W, tempo:true, set:'8 reps · pierna izquierda', instr:'Última: <b>pierna izquierda</b>. Equilibrio y control mandan sobre la velocidad.'},
-
-  // 7. NEGATIVA DE DOMINADA 3×3, desc 75s, bajada 4-5s
-  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 1/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'<b>Comprueba la barra</b> antes de colgarte. Salta hasta arriba (barbilla sobre la barra) y baja <b>lo más lento posible (4-5s)</b> hasta brazos estirados. La subida no cuenta.'},
-  {block:'7 · Bloque E — Negativa dominada', name:'Descanso', t:75, type:R, instr:'<b>Estira los antebrazos</b>: palma arriba, tira suave de los dedos 10s por lado, y sacude las manos. Si la barra resbala, sécala. Quedan 2 series.'},
-  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 2/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'Baja <b>controlando todo el recorrido</b>. Regresión válida: bajada de 3s si 4-5s es imposible.'},
-  {block:'7 · Bloque E — Negativa dominada', name:'Descanso', t:75, type:R, instr:'Brazos colgando y <b>abre-cierra las manos</b> para soltar el agarre. Hombros: círculos atrás. Última serie de negativas.'},
-  {block:'7 · Bloque E — Negativa dominada', name:'Negativa · Serie 3/3', lead:8, t:25, type:W, set:'3 reps · bajada 4-5 s', instr:'Aprieta el dorsal al frenar la bajada. Hombros lejos de las orejas.'},
-
-  // 8. HOLLOW BODY HOLD 2×20s, desc 30s
-  {block:'8 · Bloque F — Hollow', name:'Hollow body · 1/2', lead:5, t:20, type:W, set:'aguanta 20 s', instr:'Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b> todo el rato. Regresión: rodillas flexionadas (tuck).'},
-  {block:'8 · Bloque F — Hollow', name:'Descanso', t:30, type:R, instr:'<b>Rodillas al pecho</b> y balancea suave para soltar la lumbar. Respira hondo. Una repetición más.'},
-  {block:'8 · Bloque F — Hollow', name:'Hollow body · 2/2', lead:5, t:20, type:W, set:'aguanta 20 s', instr:'Respira sin soltar la zona media. Si se despega la lumbar, pasa a tuck.'},
-
-  // 9. VUELTA A LA CALMA — estiramientos 15s × 3
-  {block:'9 · Vuelta a la calma', name:'Estiramiento · Pectoral', lead:3, t:15, type:P, instr:'Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Aguanta sin rebotes.'},
-  {block:'9 · Vuelta a la calma', name:'Estiramiento · Flexor de cadera', lead:3, t:15, type:P, instr:'Zancada con la <b>rodilla de atrás en el suelo</b>, empuja la cadera hacia delante. Cambia de pierna a mitad si quieres.'},
-  {block:'9 · Vuelta a la calma', name:'Estiramiento · Isquios', lead:3, t:15, type:P, instr:'Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave.'},
+  {block:"1 · Calentamiento", name:"Cuello", t:10, type:P, instr:"Gira la cabeza en <b>círculos lentos y suaves</b>. 5s en un sentido, 5s en el otro. Sin forzar el cuello."},
+  {block:"1 · Calentamiento", name:"Hombros", t:10, type:P, instr:"Círculos amplios con los hombros: 5s hacia atrás, 5s hacia delante. Brazos sueltos."},
+  {block:"1 · Calentamiento", name:"Muñecas", t:10, type:P, instr:"Entrelaza los dedos y <b>gira las muñecas</b> en círculo; luego abre y cierra los puños. Despiértalas bien: aguantarán peso en flexiones y dominadas."},
+  {block:"1 · Calentamiento", name:"Cadera", t:10, type:P, instr:"Manos en la cadera, dibuja <b>círculos grandes con la pelvis</b>. 5s cada sentido."},
+  {block:"1 · Calentamiento", name:"Rodillas", t:10, type:P, instr:"Pies juntos, manos en las rodillas, círculos suaves. Termina con 2-3 semi-sentadillas sin bajar del todo."},
+  {block:"1 · Calentamiento", name:"Tobillos", t:10, type:P, instr:"Apoya la punta de un pie y <b>gira el tobillo</b> 5s; cambia de pie."},
+  {block:"2 · Calentamiento", name:"Bear crawl", lead:5, t:30, type:P, instr:"A cuatro patas, manos bajo los hombros, <b>rodillas flotando 1-2 cm</b>, espalda plana. Avanza mano derecha + pie izquierdo a la vez, luego al revés. <b>10 pasos adelante, 10 atrás</b>. Sin balancear la cadera."},
+  {block:"3 · Bloque A — Flexiones", name:"Flexiones · Serie 1/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Plancha recta, manos algo más anchas que los hombros. Baja el pecho a ~5 cm en <b>3s</b>, pausa 1s, sube en 1s. <b>Codos cerca del cuerpo</b>."},
+  {block:"3 · Bloque A — Flexiones", name:"Descanso", t:60, type:R, instr:"Sacude brazos y muñecas. <b>Abre el pecho</b>: entrelaza las manos en la espalda y estira 10s. Quedan 2 series."},
+  {block:"3 · Bloque A — Flexiones", name:"Flexiones · Serie 2/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Mismo tempo. Si pierdes la forma, las últimas en la <b>mesa</b> (regresión) cuentan."},
+  {block:"3 · Bloque A — Flexiones", name:"Descanso", t:60, type:R, instr:"<b>Estira las muñecas</b>: brazo estirado, palma arriba, tira suave de los dedos 10s por mano. Última serie a continuación."},
+  {block:"3 · Bloque A — Flexiones", name:"Flexiones · Serie 3/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Mantén la <b>cadera firme</b>, ni hundida ni levantada. ROM completo."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · S1 · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Empeine de atrás (izquierdo) sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s hasta muslo paralelo, pausa 1s, sube en 1s."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · S1 · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia: empeine derecho sobre la silla, peso en la <b>pierna izquierda</b>. Mismo tempo 3-1-1-0."},
+  {block:"4 · Bloque B — Búlgara", name:"Descanso", t:60, type:R, instr:"Camina unos pasos y <b>sacude las piernas</b>. Cuádriceps: talón al glúteo 8s por pierna. Quedan 8+8 (regresión: sentadilla normal)."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · S2 · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Otra vez <b>pierna derecha</b>. Rodilla apuntando hacia el dedo gordo, sin irse hacia dentro."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · S2 · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Última de búlgara: <b>pierna izquierda</b>. Controla la bajada de 3s."},
+  {block:"5 · Bloque C — Pike push-up", name:"Pike push-up · Serie 1/2", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Como una flexión pero con la <b>cadera muy alta (V invertida)</b>. Baja la cabeza hacia el suelo en 3s. El peso va a los hombros."},
+  {block:"5 · Bloque C — Pike push-up", name:"Descanso", t:60, type:R, instr:"<b>Círculos de hombros</b> hacia atrás y brazos sueltos. Cuello: oreja al hombro 5s por lado. Una serie más (regresión: manos en la mesa)."},
+  {block:"5 · Bloque C — Pike push-up", name:"Pike push-up · Serie 2/2", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Mantén los codos apuntando hacia atrás, no en cruz. Cabeza entre las manos."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · S1 · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, la izquierda se extiende atrás. Espalda recta hasta notar el isquio. Manos en la cadera."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · S1 · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia a la <b>pierna izquierda</b>. Movimiento lento y controlado, sin redondear la espalda."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"Descanso", t:60, type:R, instr:"Camina y <b>afloja la cadera</b> con círculos. Balancea cada pierna adelante-atrás 8s para soltar el isquio. Serie 2 (regresión: RDL a dos piernas)."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · S2 · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Otra vez <b>pierna derecha</b>. Cadera hacia atrás, no es una sentadilla."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · S2 · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Última: <b>pierna izquierda</b>. Equilibrio y control mandan sobre la velocidad."},
+  {block:"7 · Bloque E — Dominada estricta", name:"Dominada estricta · Serie 1/3", lead:8, t:30, type:W, tempo:[2,0,2,0], set:"3-5 reps · tempo 2-0-2-0", instr:"<b>Comprueba la barra</b> antes de colgarte. Sube en ~2s <b>sin tirón ni balanceo</b> hasta barbilla por encima de la barra; baja en ~2s sin dejarte caer. Haz <b>3-5 limpias</b> dejando 1 en la recámara."},
+  {block:"7 · Bloque E — Dominada estricta", name:"Descanso", t:90, type:R, instr:"<b>Estira los antebrazos</b>: palma arriba, tira suave de los dedos 10s por lado, y sacude las manos. La dominada completa pide más recuperación que la negativa. Quedan 2 series."},
+  {block:"7 · Bloque E — Dominada estricta", name:"Dominada estricta · Serie 2/3", lead:8, t:30, type:W, tempo:[2,0,2,0], set:"3-5 reps · tempo 2-0-2-0", instr:"<b>ROM completo</b>: brazos del todo estirados abajo, barbilla sobre la barra arriba. Media dominada no cuenta. Si hoy salen menos que ayer, es normal: anótalo."},
+  {block:"7 · Bloque E — Dominada estricta", name:"Descanso", t:90, type:R, instr:"Brazos colgando y <b>abre-cierra las manos</b> para soltar el agarre. Hombros: círculos atrás. Última serie de dominadas."},
+  {block:"7 · Bloque E — Dominada estricta", name:"Dominada estricta · Serie 3/3", lead:8, t:30, type:W, tempo:[2,0,2,0], set:"3-5 reps · tempo 2-0-2-0", instr:"<b>Bajada controlada</b> de 2s: es donde ganabas fuerza con las negativas, no la pierdas. Dorsal apretado, hombros lejos de las orejas."},
+  {block:"8 · Bloque F — Hollow", name:"Hollow body · 1/2", lead:5, t:20, type:W, set:"aguanta 20 s", instr:"Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b> todo el rato. Regresión: rodillas flexionadas (tuck)."},
+  {block:"8 · Bloque F — Hollow", name:"Descanso", t:30, type:R, instr:"<b>Rodillas al pecho</b> y balancea suave para soltar la lumbar. Respira hondo. Una repetición más."},
+  {block:"8 · Bloque F — Hollow", name:"Hollow body · 2/2", lead:5, t:20, type:W, set:"aguanta 20 s", instr:"Respira sin soltar la zona media. Si se despega la lumbar, pasa a tuck."},
+  {block:"9 · Vuelta a la calma", name:"Estiramiento · Pectoral", lead:3, t:15, type:P, instr:"Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Aguanta sin rebotes."},
+  {block:"9 · Vuelta a la calma", name:"Estiramiento · Flexor de cadera", lead:3, t:15, type:P, instr:"Zancada con la <b>rodilla de atrás en el suelo</b>, empuja la cadera hacia delante. Cambia de pierna a mitad si quieres."},
+  {block:"9 · Vuelta a la calma", name:"Estiramiento · Isquios", lead:3, t:15, type:P, instr:"Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave."}
 ];
 
 /* etiqueta de fase visible */
@@ -306,14 +287,14 @@ const phaseLabel = {work:'TRABAJO', rest:'DESCANSO', prep:'PREPARA'};
 /* total y resumen para la pantalla de inicio */
 const totalSecs = phases.reduce((a,p)=>a+p.t,0);
 const planRows = [
-  ['Calentamiento + movilidad','1:30'],
-  ['Flexiones 3×6','3:30'],
-  ['Búlgara 2×8/pierna','3:40'],
-  ['Pike push-up 2×6','2:00'],
-  ['Single-leg RDL 2×8/pierna','3:40'],
-  ['Negativa dominada 3×3','3:45'],
-  ['Hollow body 2×20s','1:10'],
-  ['Vuelta a la calma','0:45'],
+  ["Calentamiento + movilidad", "1:30"],
+  ["Flexiones 3×6", "3:30"],
+  ["Búlgara 2×8/pierna", "3:40"],
+  ["Pike push-up 2×6", "2:00"],
+  ["Single-leg RDL 2×8/pierna", "3:40"],
+  ["Dominada estricta 3×3-5", "4:30"],
+  ["Hollow body 2×20s", "1:10"],
+  ["Vuelta a la calma", "0:45"]
 ];
 const planEl = document.getElementById('planList');
 planRows.forEach((r,i)=>{
@@ -328,7 +309,9 @@ let remaining = phases[0].t;
 let running = false;
 let ticker = null;
 let soundOn = true;
-let lastTempoPhase = -1;   // última fase del ciclo de tempo sonada (0 baja, 1 pausa, 2 sube)
+let lastTempoPhase = -1;   // último segmento del ciclo de tempo sonado (0 baja, 1 pausa abajo, 2 sube, 3 pausa arriba)
+let curTempo = null;       // tempo de la fase actual: [bajada, pausaAbajo, subida, pausaArriba] o null
+let tempoCycle = 0;        // duración total del ciclo (suma de los 4 tiempos)
 let mode = 'changes';      // 'auto' | 'changes' | 'manual'
 let isReady = false;       // true = en pantalla "prepárate", esperando confirmación
 let leadRemaining = 0;     // cuenta atrás de "colócate" antes de un ejercicio
@@ -365,7 +348,34 @@ const elPhaseTag=$('phaseTag'), elBlk=$('blkLabel'), elProg=$('progBar');
 const elSet=$('setLine'), elName=$('exName'), elTimer=$('timer'), elInstr=$('instr');
 const elTempo=$('tempo'), elNext=$('nextTxt');
 const elPlayBtn=$('playBtn'), elPlayIcon=$('playIcon'), elPlayLab=$('playLab');
-const tdots=[...document.querySelectorAll('.tdot')];
+
+/* ---- tempo configurable (bajada · pausa abajo · subida · pausa arriba) ---- */
+const TEMPO_LBL = ['BAJA','PAUSA','SUBE','PAUSA'];
+/* normaliza p.tempo a [b,pa,s,pr]: true -> 3-1-1-0; array tal cual; null si no hay */
+function tempoArr(p){
+  if(!p || !p.tempo) return null;
+  if(p.tempo===true) return [3,1,1,0];
+  if(Array.isArray(p.tempo) && p.tempo.length===4) return p.tempo.map(n=>Math.max(0,+n||0));
+  return null;
+}
+/* primer segmento con duración > 0 */
+function firstSeg(arr){ for(let s=0;s<4;s++) if(arr[s]>0) return s; return 0; }
+/* segmento del ciclo en el que cae 'into' (0..cycle), saltando los de duración 0 */
+function segAt(arr,into){ let acc=0; for(let s=0;s<4;s++){ if(arr[s]<=0) continue; acc+=arr[s]; if(into<acc) return s; } return firstSeg(arr); }
+/* (re)construye los dots visibles del tempo: uno por cada tiempo > 0 */
+function buildTempoDots(arr){
+  [...elTempo.querySelectorAll('.tdot')].forEach(d=>d.remove());
+  for(let s=0;s<4;s++){
+    if(arr[s]<=0) continue;
+    const d=document.createElement('span');
+    d.className='tdot'; d.dataset.t=s;
+    d.textContent=`${TEMPO_LBL[s]} ${arr[s]}`;
+    elTempo.appendChild(d);
+  }
+}
+function highlightDot(seg){ elTempo.querySelectorAll('.tdot').forEach(d=>d.classList.toggle('active',+d.dataset.t===seg)); }
+/* sonido del metrónomo según el segmento: grave al bajar, agudo al subir, seco en las pausas */
+function tempoBeep(seg){ if(seg===0)sBaja(); else if(seg===2)sSube(); else sPausa(); }
 
 const ICON_PLAY='<path d="M8 5v14l11-7z"/>';
 const ICON_PAUSE='<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
@@ -385,8 +395,18 @@ function render(){
   elInstr.innerHTML=p.instr;
   elTimer.textContent=fmt(remaining);
   // tempo metronomo
-  if(p.tempo){elTempo.classList.add('show');lastTempoPhase=0;tdots.forEach(d=>d.classList.toggle('active',+d.dataset.t===0));}
-  else{elTempo.classList.remove('show');tdots.forEach(d=>d.classList.remove('active'));lastTempoPhase=-1;}
+  curTempo=tempoArr(p);
+  if(curTempo){
+    tempoCycle=curTempo.reduce((a,b)=>a+b,0);
+    buildTempoDots(curTempo);
+    elTempo.classList.add('show');
+    lastTempoPhase=firstSeg(curTempo);
+    highlightDot(lastTempoPhase);
+  } else {
+    elTempo.classList.remove('show');
+    [...elTempo.querySelectorAll('.tdot')].forEach(d=>d.remove());
+    lastTempoPhase=-1; tempoCycle=0;
+  }
   // siguiente
   const nx=phases[idx+1];
   if(nx){elNext.innerHTML=`${nx.name}<small>${nx.set?nx.set:phaseLabel[nx.type]}</small>`;}
@@ -396,24 +416,18 @@ function render(){
   elProg.style.width=(done/totalSecs*100).toFixed(1)+'%';
 }
 
-/* metrónomo tempo 3-1-1-0 (ciclo de 5s) durante series con tempo */
+/* metrónomo de tempo configurable: ciclo = suma de los 4 tiempos */
 function updateTempo(){
+  if(!curTempo || tempoCycle<=0) return;
   const p=phases[idx];
-  if(!p.tempo)return;
-  // posición dentro del ciclo de 5s, contando desde el inicio de la fase
-  const into=(p.t-remaining)%5; // 0..4
-  let phaseT=0;
-  if(into<3)phaseT=0;      // baja (3s)
-  else if(into<4)phaseT=1; // pausa (1s)
-  else phaseT=2;           // sube (1s)
-  tdots.forEach(d=>d.classList.toggle('active', +d.dataset.t===phaseT));
-  // aviso sonoro al cambiar de fase del tempo
-  if(phaseT!==lastTempoPhase){
-    if(phaseT===0)sBaja();        // nueva rep: a bajar
-    else if(phaseT===1)sPausa();  // 3 s cumplidos: pausa abajo
-    else sSube();                 // 1 s de pausa: ¡sube!
-    if(navigator.vibrate)navigator.vibrate(phaseT===2?25:15);
-    lastTempoPhase=phaseT;
+  const into=(p.t-remaining)%tempoCycle; // 0..ciclo-1
+  const seg=segAt(curTempo,into);
+  highlightDot(seg);
+  // aviso sonoro al cambiar de segmento del tempo
+  if(seg!==lastTempoPhase){
+    tempoBeep(seg);
+    if(navigator.vibrate)navigator.vibrate(seg===2?25:15);
+    lastTempoPhase=seg;
   }
 }
 
