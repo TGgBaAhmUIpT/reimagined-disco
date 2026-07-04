@@ -169,11 +169,18 @@
   <section id="start">
     <div>
       <div class="kicker">Julio · Mes 2 · con barra</div>
-      <h1>Sesión A<br><span>20 min</span></h1>
+      <h1>Sesión A<br><span id="h1hl">20 min</span></h1>
     </div>
-    <p class="lead">El timer te lleva fase por fase: movilidad articulación por articulación, dead hang, squat jumps y cada serie con su tempo y su metrónomo. Sigue la pantalla y no pienses en el orden. Este mes: consolidar técnica y asomarte a la primera progresión de dominada.</p>
+    <p class="lead" id="leadP">El timer te lleva fase por fase: movilidad articulación por articulación, dead hang, squat jumps y cada serie con su tempo y su metrónomo. Sigue la pantalla y no pienses en el orden. Este mes: consolidar técnica y asomarte a la primera progresión de dominada.</p>
     <div class="plan" id="planList"></div>
-    <div class="total"><span>TOTAL</span><b>21:49</b></div>
+    <div class="total"><span>TOTAL</span><b id="totalB">21:49</b></div>
+    <div class="opt" id="variantOpt">
+      <span class="ttl">Versión de hoy</span>
+      <div class="seg" id="variantSeg">
+        <button data-variant="long" class="sel"><span>Completa</span><small>~20 min</small></button>
+        <button data-variant="short"><span>Media</span><small>~10 min</small></button>
+      </div>
+    </div>
     <div class="opt">
       <span class="ttl">Avance entre fases</span>
       <div class="seg" id="modeSeg">
@@ -222,7 +229,7 @@
   <!-- FIN -->
   <section id="done">
     <div class="big">¡Hecho!</div>
-    <p>Sesión A completa. Apunta en tu hoja: segundos de dead hang, reps por serie y si la pausa de 1 s arriba en la dominada salió limpia. ~21 min bien invertidos.</p>
+    <p id="doneP">Sesión A completa. Apunta en tu hoja: segundos de dead hang, reps por serie y si la pausa de 1 s arriba en la dominada salió limpia. ~21 min bien invertidos.</p>
     <button class="btn" id="restartBtn" style="max-width:300px">↺ Otra sesión</button>
   </section>
 
@@ -242,7 +249,12 @@
 
 const W = 'work', R = 'rest', P = 'prep';
 
-const phases = [
+/* ---- Dos versiones de la sesión: completa (long) y media (short) ----
+   Si no hay versión media, HAS_SHORT es false y el selector se oculta. */
+const HAS_SHORT = true;
+const ROUTINES = {
+  long: {
+    phases: [
   {block:"1 · Calentamiento", name:"Cuello", t:8, type:P, instr:"Gira la cabeza en <b>círculos lentos y suaves</b>, un sentido y el otro. Sin forzar."},
   {block:"1 · Calentamiento", name:"Hombros", t:8, type:P, instr:"Círculos amplios con los hombros: hacia atrás y hacia delante. Brazos sueltos."},
   {block:"1 · Calentamiento", name:"Muñecas", t:8, type:P, instr:"Entrelaza los dedos y <b>gira las muñecas</b>; luego abre y cierra los puños. Aguantarán peso en flexiones y dominadas."},
@@ -287,14 +299,8 @@ const phases = [
   {block:"10 · Vuelta a la calma", name:"Estiramiento · Pectoral", lead:3, t:15, type:P, instr:"Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Aguanta sin rebotes."},
   {block:"10 · Vuelta a la calma", name:"Estiramiento · Flexor de cadera", lead:3, t:15, type:P, instr:"Zancada con la <b>rodilla de atrás en el suelo</b>, empuja la cadera hacia delante. Cambia de pierna a mitad si quieres."},
   {block:"10 · Vuelta a la calma", name:"Estiramiento · Isquios", lead:3, t:15, type:P, instr:"Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave, sin rebotes. Sesión terminada."}
-];
-
-/* etiqueta de fase visible */
-const phaseLabel = {work:'TRABAJO', rest:'DESCANSO', prep:'PREPARA'};
-
-/* total y resumen para la pantalla de inicio */
-const totalSecs = phases.reduce((a,p)=>a+p.t,0);
-const planRows = [
+],
+    planRows: [
   ["Calentamiento · movilidad", "0:45"],
   ["Dead hang", "0:53"],
   ["Squat jumps 2×5", "1:08"],
@@ -305,13 +311,69 @@ const planRows = [
   ["Dominada 3×5-6", "3:36"],
   ["Hollow body 3×20s", "2:05"],
   ["Vuelta a la calma", "0:54"]
-];
+],
+    total: "21:49",
+    h1hl: "20 min",
+    lead: "El timer te lleva fase por fase: movilidad articulación por articulación, dead hang, squat jumps y cada serie con su tempo y su metrónomo. Sigue la pantalla y no pienses en el orden. Este mes: consolidar técnica y asomarte a la primera progresión de dominada.",
+    done: "Sesión A completa. Apunta en tu hoja: segundos de dead hang, reps por serie y si la pausa de 1 s arriba en la dominada salió limpia. ~21 min bien invertidos."
+  },
+  short: {
+    phases: [
+  {block:"1 · Calentamiento express", name:"Movilidad express", t:25, type:P, instr:"Rápido y fluido: <b>cuello, hombros, muñecas, cadera y tobillos</b>, unos segundos cada uno. Lo justo para entrar en calor sin perder tiempo."},
+  {block:"1 · Calentamiento express", name:"Squat jumps · activación", lead:3, t:20, type:W, set:"5 saltos · solo activar", instr:"5 saltos con <b>aterrizaje silencioso</b>. Hoy es solo activación, <b>no potencia</b>: sin buscar altura máxima. Rodillas alineadas, amortigua con la cadera."},
+  {block:"2 · Dead hang", name:"Dead hang", lead:8, t:20, type:P, instr:"<b>Comprueba la barra</b>. Brazos estirados, agarre prono, <b>hombros activos</b>. Cuelga 20 s respirando por la nariz. Anota los segundos si quieres."},
+  {block:"2 · Dead hang", name:"Descanso", t:15, type:R, instr:"Sacude las manos, rueda los hombros. Colócate para las flexiones."},
+  {block:"3 · Bloque A — Flexiones", name:"Flexiones · Serie única", lead:5, t:35, type:W, tempo:[3,1,1,0], set:"6-8 reps · tempo 3-1-1-0", instr:"Única serie, así que <b>límpiala</b>: baja el pecho en 3s, pausa 1s, sube en 1s. Codos cerca del cuerpo, ROM completo."},
+  {block:"3 · Bloque A — Flexiones", name:"Descanso", t:20, type:R, instr:"Sacude brazos y muñecas, abre el pecho. Colócate para la búlgara."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Empeine izquierdo sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s, pausa 1s, sube en 1s. Rodilla hacia el dedo gordo."},
+  {block:"4 · Bloque B — Búlgara", name:"Búlgara · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia: peso en la <b>pierna izquierda</b>. Mismo tempo, misma calidad. Esta pierna suele ir algo por detrás."},
+  {block:"4 · Bloque B — Búlgara", name:"Descanso", t:20, type:R, instr:"Sacude las piernas, afloja el cuádriceps. Colócate para el pike."},
+  {block:"5 · Bloque C — Pike push-up", name:"Pike push-up · Serie única", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Cadera muy alta (V invertida). Baja la cabeza al suelo en 3s. El peso a los hombros. Codos hacia atrás, no en cruz."},
+  {block:"5 · Bloque C — Pike push-up", name:"Descanso", t:20, type:R, instr:"Círculos de hombros hacia atrás, afloja el cuello. Colócate para el single-leg RDL."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, espalda recta hasta notar el isquio. Cadera hacia atrás."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia a la <b>pierna izquierda</b>. Lento y controlado, sin redondear la espalda. Equilibrio sobre velocidad."},
+  {block:"6 · Bloque D — Single-leg RDL", name:"Descanso", t:20, type:R, instr:"Afloja la cadera con círculos, balancea las piernas. Colócate bajo la barra para la dominada."},
+  {block:"7 · Bloque E — Dominada", name:"Dominada · Serie única", lead:8, t:24, type:W, tempo:[2,0,2,0], set:"5-6 reps · tempo 2-0-2-0 · RIR 1", instr:"<b>Comprueba la barra</b>. Grip prono, brazos estirados abajo, <b>barbilla sobre la barra arriba</b>. Sube 2s, baja 2s. Deja 1 rep en la recámara. Sin balanceo."},
+  {block:"7 · Bloque E — Dominada", name:"Descanso", t:20, type:R, instr:"Estira los antebrazos, abre-cierra las manos. Colócate para el hollow."},
+  {block:"8 · Bloque F — Hollow", name:"Hollow body hold", lead:5, t:22, type:W, set:"aguanta 20-25 s", instr:"Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b>. Regresión: rodillas flexionadas (tuck)."},
+  {block:"9 · Vuelta a la calma", name:"Estiramiento · Pectoral", lead:3, t:15, type:P, instr:"Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Sin rebotes."},
+  {block:"9 · Vuelta a la calma", name:"Estiramiento · Isquios", lead:3, t:15, type:P, instr:"Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave. Sesión media terminada."}
+],
+    planRows: [
+  ["Calentamiento express", "0:48"],
+  ["Dead hang", "0:43"],
+  ["Flexiones 1×6-8", "1:00"],
+  ["Búlgara 1×8/pierna", "1:48"],
+  ["Pike push-up 1×6", "0:55"],
+  ["Single-leg RDL 1×8/pierna", "1:46"],
+  ["Dominada 1×5-6", "0:52"],
+  ["Hollow body 1×20-25s", "0:27"],
+  ["Vuelta a la calma", "0:36"]
+],
+    total: "8:01",
+    h1hl: "10 min",
+    lead: "Versión media: 1 serie de cada patrón, mismo tempo, calentamiento mínimo. Cuenta como sesión válida en tu hoja de 12 y no genera deuda. La regla: no recortes el tempo — es el estímulo.",
+    done: "Sesión media hecha: los 6 patrones cubiertos en ~9 min. Cuenta como sesión válida, no genera deuda. Si te sobró energía, la próxima añade una 2ª serie de dominada o flexiones."
+  }
+};
+
+/* etiqueta de fase visible */
+const phaseLabel = {work:'TRABAJO', rest:'DESCANSO', prep:'PREPARA'};
+
+/* rutina activa (se rellena en applyVariant) */
+let variant = 'long';
+let phases = ROUTINES.long.phases;
+let planRows = ROUTINES.long.planRows;
+let totalSecs = phases.reduce((a,p)=>a+p.t,0);
 const planEl = document.getElementById('planList');
-planRows.forEach((r,i)=>{
-  const d=document.createElement('div');d.className='row';
-  d.innerHTML=`<b>${i+1}. ${r[0]}</b><span class="n">${r[1]}</span>`;
-  planEl.appendChild(d);
-});
+function renderPlan(){
+  planEl.innerHTML='';
+  planRows.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='row';
+    d.innerHTML=`<b>${i+1}. ${r[0]}</b><span class="n">${r[1]}</span>`;
+    planEl.appendChild(d);
+  });
+}
 
 /* ============ ESTADO ============ */
 let idx = 0;
@@ -567,6 +629,22 @@ function goto(i){
   else{elPlayIcon.innerHTML=ICON_PLAY;elPlayLab.textContent='SIGUE';elPhaseTag.textContent=phaseLabel[phases[idx].type];}
 }
 
+/* cambia entre versión completa y media: recarga fases, plan, textos y total */
+function applyVariant(v){
+  variant = (v==='short' && HAS_SHORT) ? 'short' : 'long';
+  const r = ROUTINES[variant];
+  phases = r.phases;
+  planRows = r.planRows;
+  totalSecs = phases.reduce((a,p)=>a+p.t,0);
+  $('h1hl').textContent = r.h1hl;
+  $('leadP').textContent = r.lead;
+  $('totalB').textContent = r.total;
+  $('doneP').textContent = r.done;
+  renderPlan();
+  idx=0; remaining=phases[0].t;
+  $('variantSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('sel',b.dataset.variant===variant));
+}
+
 function startSession(){
   elStart.style.display='none';
   elDone.classList.remove('show');
@@ -613,6 +691,11 @@ $('modeSeg').querySelectorAll('button').forEach(b=>{
     mode=b.dataset.mode;
     $('modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
   };
+});
+
+/* selector de versión (completa / media) */
+$('variantSeg').querySelectorAll('button').forEach(b=>{
+  b.onclick=()=>{ applyVariant(b.dataset.variant); };
 });
 
 /* tocar el escenario continúa cuando estás en "prepárate" */
@@ -674,6 +757,8 @@ document.addEventListener('touchend',()=>{ if(wakeActive)playVid(); },{passive:t
 $('goBtn').addEventListener('click',keepAwake);
 $('restartBtn').addEventListener('click',keepAwake);
 
+if(!HAS_SHORT){ const vo=$('variantOpt'); if(vo) vo.style.display='none'; }
+applyVariant('long');
 render();
 </script>
 </body>
