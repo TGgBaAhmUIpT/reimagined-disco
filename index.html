@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rutina 20 min · Julio · Timer</title>
+<title>Rutina Agosto 2026 · Timer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -168,16 +168,16 @@
   <!-- INICIO -->
   <section id="start">
     <div>
-      <div class="kicker">Julio · Mes 2 · con barra</div>
-      <h1>Sesión A<br><span id="h1hl">20 min</span></h1>
+      <div class="kicker">Agosto 2026 · Mes 3 · Sesión A</div>
+      <h1>Sesión A<br><span id="h1hl">25 min</span></h1>
     </div>
-    <p class="lead" id="leadP">El timer te lleva fase por fase: movilidad articulación por articulación, dead hang, squat jumps y cada serie con su tempo y su metrónomo. Sigue la pantalla y no pienses en el orden. Este mes: consolidar técnica y asomarte a la primera progresión de dominada.</p>
+    <p class="lead" id="leadP">El mes del reparto. Dominadas 4×4 con RIR 2: prohibido apretar la primera serie. Exhala en el esfuerzo, nunca bloquees el aire.</p>
     <div class="plan" id="planList"></div>
-    <div class="total"><span>TOTAL</span><b id="totalB">21:49</b></div>
+    <div class="total"><span>TOTAL</span><b id="totalB">23:22</b></div>
     <div class="opt" id="variantOpt">
       <span class="ttl">Versión de hoy</span>
       <div class="seg" id="variantSeg">
-        <button data-variant="long" class="sel"><span>Completa</span><small>~20 min</small></button>
+        <button data-variant="long" class="sel"><span>Completa</span><small>~23 min</small></button>
         <button data-variant="short"><span>Media</span><small>~10 min</small></button>
       </div>
     </div>
@@ -229,7 +229,7 @@
   <!-- FIN -->
   <section id="done">
     <div class="big">¡Hecho!</div>
-    <p id="doneP">Sesión A completa. Apunta en tu hoja: segundos de dead hang, reps por serie y si la pausa de 1 s arriba en la dominada salió limpia. ~21 min bien invertidos.</p>
+    <p id="doneP">Sesión completada. Anota los segundos del dead hang y las reps de las 4 series de dominada en la hoja de seguimiento.</p>
     <button class="btn" id="restartBtn" style="max-width:300px">↺ Otra sesión</button>
   </section>
 
@@ -255,105 +255,118 @@ const HAS_SHORT = true;
 const ROUTINES = {
   long: {
     phases: [
-  {block:"1 · Calentamiento", name:"Cuello", t:8, type:P, instr:"Gira la cabeza en <b>círculos lentos y suaves</b>, un sentido y el otro. Sin forzar."},
-  {block:"1 · Calentamiento", name:"Hombros", t:8, type:P, instr:"Círculos amplios con los hombros: hacia atrás y hacia delante. Brazos sueltos."},
-  {block:"1 · Calentamiento", name:"Muñecas", t:8, type:P, instr:"Entrelaza los dedos y <b>gira las muñecas</b>; luego abre y cierra los puños. Aguantarán peso en flexiones y dominadas."},
-  {block:"1 · Calentamiento", name:"Cadera", t:7, type:P, instr:"Manos en la cadera, dibuja <b>círculos grandes con la pelvis</b>, cada sentido."},
-  {block:"1 · Calentamiento", name:"Rodillas", t:7, type:P, instr:"Pies juntos, manos en las rodillas, círculos suaves. Termina con 2-3 semi-sentadillas. Prepáralas para los squat jumps."},
-  {block:"1 · Calentamiento", name:"Tobillos", t:7, type:P, instr:"Apoya la punta de un pie y <b>gira el tobillo</b>; cambia de pie. Clave para aterrizar los saltos."},
-  {block:"2 · Dead hang", name:"Dead hang", lead:8, t:25, type:P, instr:"<b>Comprueba la barra</b> antes de colgarte. Brazos estirados, agarre prono, <b>hombros activos</b> (tira suave hacia abajo con las escápulas, no cuelgues muerto). Respira por la nariz. <b>Anota los segundos</b>: es tu métrica del mes."},
-  {block:"2 · Dead hang", name:"Descanso", t:20, type:R, instr:"Sacude las manos y afloja el agarre. Rueda los hombros hacia atrás. Ahora vienen los <b>squat jumps</b>."},
-  {block:"3 · Squat jumps", name:"Squat jumps · Serie 1/2", lead:3, t:16, type:W, set:"5 saltos · intención máxima", instr:"Pies al ancho de caderas, baja a media sentadilla y <b>salta con intención máxima</b>. Lo importante no es la altura: <b>aterriza silencioso y controlado</b>, amortiguando con la cadera, rodillas alineadas. 5 saltos."},
-  {block:"3 · Squat jumps", name:"Descanso", t:30, type:R, instr:"Camina y sacude las piernas. Recupera el aliento: el segundo set debe salir igual de explosivo. (Si notas molestia de rodilla, reduce la altura del salto, no lo quites)."},
-  {block:"3 · Squat jumps", name:"Squat jumps · Serie 2/2", lead:3, t:16, type:W, set:"5 saltos · aterrizaje silencioso", instr:"Otros 5 saltos explosivos. Mantén la <b>calidad del aterrizaje</b>: si empieza a sonar el impacto, baja la altura. Este es el primer trabajo de potencia del programa."},
-  {block:"4 · Bloque A — Flexiones", name:"Flexiones · Serie 1/3", lead:5, t:35, type:W, tempo:[3,1,1,0], set:"6-8 reps · tempo 3-1-1-0", instr:"Plancha recta, manos algo más anchas que los hombros. Baja el pecho a ~5 cm en <b>3s</b>, pausa 1s, sube en 1s. <b>Codos cerca del cuerpo</b>. Empuja hacia 8 cuando salga limpio."},
-  {block:"4 · Bloque A — Flexiones", name:"Descanso", t:45, type:R, instr:"Sacude brazos y muñecas. <b>Abre el pecho</b>: entrelaza las manos en la espalda y estira 10s. Quedan 2 series."},
-  {block:"4 · Bloque A — Flexiones", name:"Flexiones · Serie 2/3", lead:5, t:35, type:W, tempo:[3,1,1,0], set:"6-8 reps · tempo 3-1-1-0", instr:"Mismo tempo. Si pierdes la forma, las últimas en la <b>mesa</b> (regresión) cuentan."},
-  {block:"4 · Bloque A — Flexiones", name:"Descanso", t:45, type:R, instr:"<b>Estira las muñecas</b>: brazo estirado, palma arriba, tira suave de los dedos 10s por mano. Última serie a continuación."},
-  {block:"4 · Bloque A — Flexiones", name:"Flexiones · Serie 3/3", lead:5, t:35, type:W, tempo:[3,1,1,0], set:"6-8 reps · tempo 3-1-1-0", instr:"Mantén la <b>cadera firme</b>, ni hundida ni levantada. ROM completo, pecho casi al suelo."},
-  {block:"5 · Bloque B — Búlgara", name:"Búlgara · S1 · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Empeine de atrás (izquierdo) sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s hasta muslo paralelo, pausa 1s, sube en 1s. Rodilla hacia el dedo gordo."},
-  {block:"5 · Bloque B — Búlgara", name:"Búlgara · S1 · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia: empeine derecho sobre la silla, peso en la <b>pierna izquierda</b>. Mismo tempo 3-1-1-0. Esta pierna suele ir algo por detrás: cuídala."},
-  {block:"5 · Bloque B — Búlgara", name:"Descanso", t:55, type:R, instr:"Camina unos pasos y <b>sacude las piernas</b>. Cuádriceps: talón al glúteo 8s por pierna. Queda 1 serie (8+8). Regresión: sentadilla normal."},
-  {block:"5 · Bloque B — Búlgara", name:"Búlgara · S2 · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Otra vez <b>pierna derecha</b>. Bajada controlada de 3s. (Si las 2 series salen fáciles y limpias 2 sesiones seguidas, sube a pausa 2s abajo: tempo 3-2-1-0)."},
-  {block:"5 · Bloque B — Búlgara", name:"Búlgara · S2 · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Última de búlgara: <b>pierna izquierda</b>. Rodilla estable, sin irse hacia dentro. Controla la bajada."},
-  {block:"6 · Bloque C — Pike push-up", name:"Pike push-up · Serie 1/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Como una flexión pero con la <b>cadera muy alta (V invertida)</b>. Baja la cabeza hacia el suelo en 3s. El peso va a los hombros."},
-  {block:"6 · Bloque C — Pike push-up", name:"Descanso", t:50, type:R, instr:"<b>Círculos de hombros</b> hacia atrás y brazos sueltos. Cuello: oreja al hombro 5s por lado. Quedan 2 series. Regresión: manos en la mesa."},
-  {block:"6 · Bloque C — Pike push-up", name:"Pike push-up · Serie 2/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Codos apuntando hacia atrás, no en cruz. Cabeza entre las manos. Mismo tempo."},
-  {block:"6 · Bloque C — Pike push-up", name:"Descanso", t:50, type:R, instr:"Afloja hombros y cuello. Sacude los brazos por encima de la cabeza. Última serie a continuación."},
-  {block:"6 · Bloque C — Pike push-up", name:"Pike push-up · Serie 3/3", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Aprieta el core para no dejar caer la cadera. Baja controlado los 3s hasta rozar el suelo con la coronilla."},
-  {block:"7 · Bloque D — Single-leg RDL", name:"SL-RDL · S1 · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, la izquierda se extiende atrás. Espalda recta hasta notar el isquio. Manos en la cadera."},
-  {block:"7 · Bloque D — Single-leg RDL", name:"SL-RDL · S1 · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia a la <b>pierna izquierda</b>. Movimiento lento y controlado, sin redondear la espalda. Cadera hacia atrás."},
-  {block:"7 · Bloque D — Single-leg RDL", name:"Descanso", t:50, type:R, instr:"Camina y <b>afloja la cadera</b> con círculos. Balancea cada pierna adelante-atrás 8s para soltar el isquio. Queda 1 serie. Regresión: RDL a dos piernas."},
-  {block:"7 · Bloque D — Single-leg RDL", name:"SL-RDL · S2 · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Otra vez <b>pierna derecha</b>. Cadera hacia atrás, no es una sentadilla. Equilibrio sobre control."},
-  {block:"7 · Bloque D — Single-leg RDL", name:"SL-RDL · S2 · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Última: <b>pierna izquierda</b>. El control y el equilibrio mandan sobre la velocidad."},
-  {block:"8 · Bloque E — Dominada", name:"Dominada · Serie 1/3", lead:8, t:24, type:W, tempo:[2,0,2,0], set:"5-6 reps · tempo 2-0-2-0 · RIR 1", instr:"<b>Comprueba la barra</b>. Grip prono, brazos estirados abajo, <b>barbilla sobre la barra arriba</b>. Sube en 2s, baja en 2s. Deja <b>1 rep limpia en la recámara</b>. Sin balanceo ni kipping."},
-  {block:"8 · Bloque E — Dominada", name:"Descanso", t:60, type:R, instr:"<b>Estira los antebrazos</b>: palma arriba, tira suave de los dedos 10s por lado, y abre-cierra las manos. Si la barra resbala, sécala. Quedan 2 series."},
-  {block:"8 · Bloque E — Dominada", name:"Dominada · Serie 2/3", lead:8, t:24, type:W, tempo:[2,0,2,0], set:"5-6 reps · tempo 2-0-2-0 · RIR 1", instr:"ROM completo: estira del todo abajo, barbilla sobre la barra arriba. Si un día solo salen 4-5 limpias, cuenta esas. Mejor impecables que con balanceo."},
-  {block:"8 · Bloque E — Dominada", name:"Descanso", t:60, type:R, instr:"Brazos colgando y <b>abre-cierra las manos</b> para soltar el agarre. Hombros: círculos atrás. <b>Última serie: la 1ª rep con pausa de 1 s arriba</b> (Progresión 1)."},
-  {block:"8 · Bloque E — Dominada", name:"Dominada · Serie 3/3", lead:8, t:24, type:W, tempo:[2,0,2,0], set:"última serie · pausa 1 s arriba en la 1ª rep", instr:"En la <b>primera rep, mantén 1 s con la barbilla sobre la barra</b> antes de bajar controlado: tu primer bocado de la Progresión 1. Si la barra se mueve, frena y reasienta. Resto de reps a tempo normal."},
-  {block:"9 · Bloque F — Hollow", name:"Hollow body · 1/3", lead:5, t:20, type:W, set:"aguanta 20 s", instr:"Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b> todo el rato. Regresión: rodillas flexionadas (tuck)."},
-  {block:"9 · Bloque F — Hollow", name:"Descanso", t:25, type:R, instr:"<b>Rodillas al pecho</b> y balancea suave para soltar la lumbar. Respira hondo. Quedan 2 aguantes."},
-  {block:"9 · Bloque F — Hollow", name:"Hollow body · 2/3", lead:5, t:20, type:W, set:"aguanta 20 s", instr:"Respira sin soltar la zona media. Si se despega la lumbar, pasa a tuck (rodillas dobladas)."},
-  {block:"9 · Bloque F — Hollow", name:"Descanso", t:25, type:R, instr:"Otra vez rodillas al pecho, afloja la lumbar. Último aguante a continuación."},
-  {block:"9 · Bloque F — Hollow", name:"Hollow body · 3/3", lead:5, t:20, type:W, set:"aguanta 20 s", instr:"El último. Mantén los brazos estirados por detrás de la cabeza y la lumbar clavada al suelo hasta el final."},
-  {block:"10 · Vuelta a la calma", name:"Estiramiento · Pectoral", lead:3, t:15, type:P, instr:"Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Aguanta sin rebotes."},
-  {block:"10 · Vuelta a la calma", name:"Estiramiento · Flexor de cadera", lead:3, t:15, type:P, instr:"Zancada con la <b>rodilla de atrás en el suelo</b>, empuja la cadera hacia delante. Cambia de pierna a mitad si quieres."},
-  {block:"10 · Vuelta a la calma", name:"Estiramiento · Isquios", lead:3, t:15, type:P, instr:"Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave, sin rebotes. Sesión terminada."}
+  {block:"1 · Calentamiento articular", name:"Cuello", t:10, type:P, instr:"Rotaciones suaves, <b>5 a cada lado</b>. Sin forzar el final del recorrido."},
+  {block:"1 · Calentamiento articular", name:"Hombros", t:10, type:P, instr:"Círculos grandes <b>hacia atrás</b>, ×8. Abre el pecho al pasar por arriba."},
+  {block:"1 · Calentamiento articular", name:"Codos y muñecas", t:10, type:P, instr:"Círculos ×8. <b>No te lo saltes</b>: es lo que prepara el agarre para la barra."},
+  {block:"1 · Calentamiento articular", name:"Columna torácica", t:10, type:P, instr:"Rotaciones de pie, <b>5 por lado</b>. Gira desde el esternón, no desde la cadera."},
+  {block:"1 · Calentamiento articular", name:"Cadera", t:10, type:P, instr:"Círculos de rodilla, <b>5 por lado</b>. Rodilla arriba y abre hacia fuera."},
+  {block:"1 · Calentamiento articular", name:"Rodillas", t:10, type:P, instr:"<b>Medias sentadillas</b> sin carga ×8. Tranquilo, es engrase, no trabajo."},
+  {block:"1 · Calentamiento articular", name:"Tobillos", t:10, type:P, instr:"Círculos ×8 por pie. Prepara el apoyo para el equilibrio que viene ahora."},
+  {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · DERECHA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Rodilla izquierda a la altura de la cadera. <b>Mirada a un punto fijo</b> a 3-4 m. Corrige con el pie, no con el tronco: reparte el peso entre dedo gordo, meñique y talón."},
+  {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · IZQUIERDA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Cambia de pierna. El objetivo <b>no es quedarse quieto</b>, es recuperar rápido cuando te tambalees."},
+  {block:"3 · Dead hang", name:"Dead hang", lead:8, t:30, type:P, set:"aguanta 30 s · anota los segundos", instr:"Comprueba que la barra está bien encajada. Brazos estirados del todo, agarre prono, <b>hombros activos</b> (escápulas tiran hacia abajo). Respira por la nariz."},
+  {block:"3 · Dead hang", name:"Descanso", t:20, type:R, instr:"Sacude las manos y afloja los antebrazos. Objetivo del mes: llegar a <b>35 s</b> en la semana 4."},
+  {block:"4 · Squat jumps", name:"Squat jumps · Serie 1/2", lead:3, t:10, type:W, set:"5 saltos · intención máxima", instr:"Media sentadilla y salta con intención máxima. Lo que importa no es la altura: es el <b>aterrizaje silencioso</b>, amortiguando con la cadera."},
+  {block:"4 · Squat jumps", name:"Descanso", t:30, type:R, instr:"Respira y afloja los gemelos. Se mantienen en 2×5 <b>a propósito</b>: precaución de reincorporación progresiva al impacto."},
+  {block:"4 · Squat jumps", name:"Squat jumps · Serie 2/2", lead:3, t:10, type:W, set:"5 saltos · intención máxima", instr:"Últimos 5. Si notas molestia de rodilla al aterrizar, <b>baja la altura del salto</b> antes que quitarlos."},
+  {block:"5 · Flexiones", name:"Flexiones · Serie 1/3", lead:5, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · tempo 3-1-1-0", instr:"Cuerpo en línea, codos a ~45°. Pecho casi al suelo. <b>Exhala al subir</b>, no bloquees el aire."},
+  {block:"5 · Flexiones", name:"Descanso", t:45, type:R, instr:"Afloja muñecas y estira el pecho en el marco de la puerta. <b>Quedan 2 series.</b>"},
+  {block:"5 · Flexiones", name:"Flexiones · Serie 2/3", lead:5, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · tempo 3-1-1-0", instr:"Mantén los <b>3 s de bajada</b>. Si no llegas a 8 con tempo limpio, para en las que salgan bien."},
+  {block:"5 · Flexiones", name:"Descanso", t:45, type:R, instr:"Sacude los brazos. <b>Última serie.</b> (Si hoy no sale: rodillas apoyadas, mismo tempo.)"},
+  {block:"5 · Flexiones", name:"Flexiones · Serie 3/3", lead:5, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · tempo 3-1-1-0", instr:"Última. Prioridad absoluta al <b>recorrido completo</b>: media repetición no cuenta."},
+  {block:"6 · Búlgara", name:"Búlgara · S1 · DERECHA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna derecha · tempo 3-2-1-0", instr:"Pie de atrás en la silla. <b>2 s de pausa abajo</b> — es la progresión que ganaste en julio. En la pausa <b>respira</b>, no aguantes el aire."},
+  {block:"6 · Búlgara", name:"Búlgara · S1 · IZQUIERDA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna izquierda · tempo 3-2-1-0", instr:"Cambia de pierna. Rodilla alineada con el pie, tronco ligeramente adelante. <b>Anota si esta pierna va por detrás.</b>"},
+  {block:"6 · Búlgara", name:"Descanso", t:55, type:R, instr:"Estira el cuádriceps de las dos piernas, 20 s cada una. <b>Queda 1 serie.</b> Menos reps que en julio, pero cada una dura más: es progresión, no rebaja."},
+  {block:"6 · Búlgara", name:"Búlgara · S2 · DERECHA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna derecha · tempo 3-2-1-0", instr:"Segunda y última. Mantén los <b>2 s abajo</b> aunque quemen."},
+  {block:"6 · Búlgara", name:"Búlgara · S2 · IZQUIERDA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna izquierda · tempo 3-2-1-0", instr:"Última pierna. Si el tempo se rompe, para: <b>mejor 4 limpias que 6 aceleradas</b>."},
+  {block:"7 · Pike push-up", name:"Pike · Serie 1/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Cadera alta, forma de V, coronilla hacia el suelo. <b>Bajado a 5 reps a propósito</b>: en julio las 2 últimas de 6 te costaban demasiado."},
+  {block:"7 · Pike push-up", name:"Descanso", t:60, type:R, instr:"Afloja hombros y cuello con círculos suaves. <b>Descanso subido a 60 s</b> — es la otra mitad del arreglo. Quedan 2 series."},
+  {block:"7 · Pike push-up", name:"Pike · Serie 2/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"5 limpias con <b>RIR 2</b>. Si las 5 salen sobradas dos sesiones seguidas, en la semana 3 vuelves a 6."},
+  {block:"7 · Pike push-up", name:"Descanso", t:60, type:R, instr:"Estira el hombro cruzando el brazo por delante, 20 s cada lado. <b>Última serie.</b> (Regresión: menos recorrido, mismo tempo.)"},
+  {block:"7 · Pike push-up", name:"Pike · Serie 3/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Última. Si notas que <b>el hombro no llega al recorrido</b> en vez de que falta fuerza, anótalo: es un dato para el asesor."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S1 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"La <b>cadera va atrás</b>, no el tronco abajo. Semanas 1-2: puedes apoyar <b>dos dedos</b> en la pared — para el equilibrio, no para el peso."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S1 · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Cambia de pierna. Baja solo hasta donde <b>mantengas la espalda neutra</b>, aunque sea medio recorrido."},
+  {block:"8 · Single-leg RDL", name:"Descanso", t:50, type:R, instr:"Estira isquios y afloja la cadera. <b>Queda 1 serie.</b> Anota cuántas veces perdiste el equilibrio en cada pierna."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"Segunda y última. Si estás <b>empujando la pared</b>, ya no es un single-leg RDL: suelta y baja menos."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Última pierna. A partir de la <b>semana 3, sin apoyo</b>."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 1/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Primera rep: <b>1 s con la barbilla sobre la barra, respirando</b>. Luego 3 normales. <b>PROHIBIDO hacer 5 o 6</b> aunque puedas: eso es lo que te tumbaba la tercera serie."},
+  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Sacude antebrazos y afloja el agarre. <b>Quedan 3 series.</b> Este mes son 4 series cortas, no 3 largas: 16 reps limpias en vez de 15 con dos malas."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 2/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Otra vez pausa de <b>1 s arriba</b> en la primera rep. Sin kipping: si la barra se mueve, frenas y reasientas."},
+  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Cuelga los brazos y respira hondo. <b>Quedan 2 series.</b> Series 3 y 4 ya sin pausa arriba."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 3/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · sin pausa", instr:"Sin pausa arriba. <b>Barbilla sobre la barra</b> arriba, <b>brazos estirados</b> abajo. Si solo salen 3 limpias, paras en 3."},
+  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Estira antebrazos y dorsal. <b>Última serie — y es la que mide el mes.</b> Si sale igual de limpia que la primera, has hecho el mes perfecto."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 4/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · sin pausa", instr:"La serie clave. Si se te cae, la señal <b>no</b> es apretar más: es que las tres primeras iban demasiado al límite. Anota las reps reales de las 4 series."},
+  {block:"10 · Hollow body hold", name:"Hollow · Serie 1/3", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"Lumbar <b>pegada al suelo</b>, brazos y piernas estirados. Si la espalda se despega, sube las rodillas."},
+  {block:"10 · Hollow body hold", name:"Descanso", t:25, type:R, instr:"Rodillas al pecho y balancéate suave para aflojar lumbar. <b>Quedan 2.</b>"},
+  {block:"10 · Hollow body hold", name:"Hollow · Serie 2/3", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"25 s. Respira <b>sin soltar la tensión</b> del abdomen — y sin bloquear el aire."},
+  {block:"10 · Hollow body hold", name:"Descanso", t:25, type:R, instr:"Afloja lumbar. <b>Última.</b> (Si no llegas a 25 s: rodillas dobladas, mismo tiempo.)"},
+  {block:"10 · Hollow body hold", name:"Hollow · Serie 3/3", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"Último aguante del día. Subido de 20 a 25 s este mes. <b>Aguanta la posición, no la respiración.</b>"},
+  {block:"11 · Vuelta a la calma", name:"Pectoral en marco", lead:3, t:15, type:P, instr:"Antebrazo en el marco de la puerta, gira el tronco hacia fuera. <b>15 s por lado si te da tiempo.</b>"},
+  {block:"11 · Vuelta a la calma", name:"Flexor de cadera", lead:3, t:15, type:P, instr:"Rodilla al suelo, empuja la cadera adelante con el glúteo apretado. Lo que más se carga con la búlgara."},
+  {block:"11 · Vuelta a la calma", name:"Isquiotibiales", lead:3, t:15, type:P, instr:"Talón adelante, cadera atrás, espalda recta. Hecho. <b>El Elidel del pie, después de la ducha — nunca antes de entrenar.</b>"}
 ],
     planRows: [
-  ["Calentamiento · movilidad", "0:45"],
-  ["Dead hang", "0:53"],
-  ["Squat jumps 2×5", "1:08"],
-  ["Flexiones 3×6-8", "3:30"],
-  ["Búlgara 2×8/pierna", "3:51"],
-  ["Pike push-up 3×6", "3:25"],
-  ["Single-leg RDL 2×8/pierna", "3:42"],
-  ["Dominada 3×5-6", "3:36"],
-  ["Hollow body 3×20s", "2:05"],
+  ["Calentamiento articular", "1:10"],
+  ["Apoyo unipodal", "0:46"],
+  ["Dead hang", "0:58"],
+  ["Squat jumps", "0:56"],
+  ["Flexiones", "3:45"],
+  ["Búlgara", "3:35"],
+  ["Pike push-up", "3:30"],
+  ["Single-leg RDL", "3:02"],
+  ["Dominadas", "4:40"],
+  ["Hollow body hold", "2:20"],
   ["Vuelta a la calma", "0:54"]
 ],
-    total: "21:49",
-    h1hl: "20 min",
-    lead: "El timer te lleva fase por fase: movilidad articulación por articulación, dead hang, squat jumps y cada serie con su tempo y su metrónomo. Sigue la pantalla y no pienses en el orden. Este mes: consolidar técnica y asomarte a la primera progresión de dominada.",
-    done: "Sesión A completa. Apunta en tu hoja: segundos de dead hang, reps por serie y si la pausa de 1 s arriba en la dominada salió limpia. ~21 min bien invertidos."
+    total: "23:22",
+    h1hl: "25 min",
+    lead: "El mes del reparto. Dominadas 4×4 con RIR 2: prohibido apretar la primera serie. Exhala en el esfuerzo, nunca bloquees el aire.",
+    done: "Sesión completada. Anota los segundos del dead hang y las reps de las 4 series de dominada en la hoja de seguimiento."
   },
   short: {
     phases: [
-  {block:"1 · Calentamiento express", name:"Movilidad express", t:25, type:P, instr:"Rápido y fluido: <b>cuello, hombros, muñecas, cadera y tobillos</b>, unos segundos cada uno. Lo justo para entrar en calor sin perder tiempo."},
-  {block:"1 · Calentamiento express", name:"Squat jumps · activación", lead:3, t:20, type:W, set:"5 saltos · solo activar", instr:"5 saltos con <b>aterrizaje silencioso</b>. Hoy es solo activación, <b>no potencia</b>: sin buscar altura máxima. Rodillas alineadas, amortigua con la cadera."},
-  {block:"2 · Dead hang", name:"Dead hang", lead:8, t:20, type:P, instr:"<b>Comprueba la barra</b>. Brazos estirados, agarre prono, <b>hombros activos</b>. Cuelga 20 s respirando por la nariz. Anota los segundos si quieres."},
-  {block:"2 · Dead hang", name:"Descanso", t:15, type:R, instr:"Sacude las manos, rueda los hombros. Colócate para las flexiones."},
-  {block:"3 · Bloque A — Flexiones", name:"Flexiones · Serie única", lead:5, t:35, type:W, tempo:[3,1,1,0], set:"6-8 reps · tempo 3-1-1-0", instr:"Única serie, así que <b>límpiala</b>: baja el pecho en 3s, pausa 1s, sube en 1s. Codos cerca del cuerpo, ROM completo."},
-  {block:"3 · Bloque A — Flexiones", name:"Descanso", t:20, type:R, instr:"Sacude brazos y muñecas, abre el pecho. Colócate para la búlgara."},
-  {block:"4 · Bloque B — Búlgara", name:"Búlgara · Pierna DERECHA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"Empeine izquierdo sobre la silla, peso en la <b>pierna derecha</b>. Baja en 3s, pausa 1s, sube en 1s. Rodilla hacia el dedo gordo."},
-  {block:"4 · Bloque B — Búlgara", name:"Búlgara · Pierna IZQUIERDA", lead:4, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia: peso en la <b>pierna izquierda</b>. Mismo tempo, misma calidad. Esta pierna suele ir algo por detrás."},
-  {block:"4 · Bloque B — Búlgara", name:"Descanso", t:20, type:R, instr:"Sacude las piernas, afloja el cuádriceps. Colócate para el pike."},
-  {block:"5 · Bloque C — Pike push-up", name:"Pike push-up · Serie única", lead:5, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · tempo 3-1-1-0", instr:"Cadera muy alta (V invertida). Baja la cabeza al suelo en 3s. El peso a los hombros. Codos hacia atrás, no en cruz."},
-  {block:"5 · Bloque C — Pike push-up", name:"Descanso", t:20, type:R, instr:"Círculos de hombros hacia atrás, afloja el cuello. Colócate para el single-leg RDL."},
-  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · Pierna DERECHA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna derecha", instr:"De pie sobre la <b>pierna derecha</b>. Baja el torso como un balancín, espalda recta hasta notar el isquio. Cadera hacia atrás."},
-  {block:"6 · Bloque D — Single-leg RDL", name:"SL-RDL · Pierna IZQUIERDA", lead:3, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · pierna izquierda", instr:"Cambia a la <b>pierna izquierda</b>. Lento y controlado, sin redondear la espalda. Equilibrio sobre velocidad."},
-  {block:"6 · Bloque D — Single-leg RDL", name:"Descanso", t:20, type:R, instr:"Afloja la cadera con círculos, balancea las piernas. Colócate bajo la barra para la dominada."},
-  {block:"7 · Bloque E — Dominada", name:"Dominada · Serie única", lead:8, t:24, type:W, tempo:[2,0,2,0], set:"5-6 reps · tempo 2-0-2-0 · RIR 1", instr:"<b>Comprueba la barra</b>. Grip prono, brazos estirados abajo, <b>barbilla sobre la barra arriba</b>. Sube 2s, baja 2s. Deja 1 rep en la recámara. Sin balanceo."},
-  {block:"7 · Bloque E — Dominada", name:"Descanso", t:20, type:R, instr:"Estira los antebrazos, abre-cierra las manos. Colócate para el hollow."},
-  {block:"8 · Bloque F — Hollow", name:"Hollow body hold", lead:5, t:22, type:W, set:"aguanta 20-25 s", instr:"Boca arriba, sube hombros y piernas a la vez, brazos estirados. <b>Lumbar pegada al suelo</b>. Regresión: rodillas flexionadas (tuck)."},
-  {block:"9 · Vuelta a la calma", name:"Estiramiento · Pectoral", lead:3, t:15, type:P, instr:"Antebrazo en el <b>marco de la puerta</b>, gira el cuerpo al lado contrario hasta notar el pecho. Sin rebotes."},
-  {block:"9 · Vuelta a la calma", name:"Estiramiento · Isquios", lead:3, t:15, type:P, instr:"Pierna estirada delante, baja el torso con la <b>espalda recta</b> hacia la punta del pie. Suave. Sesión media terminada."}
+  {block:"1 · Calentamiento express", name:"Movilidad express", t:30, type:P, instr:"Hombros, cadera y tobillos: círculos rápidos. <b>Lo mínimo para no entrar en frío.</b>"},
+  {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · DERECHA", lead:3, t:15, type:P, set:"aguanta 15 s", instr:"Mirada a un punto fijo. Corrige con el pie, no con el tronco."},
+  {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · IZQUIERDA", lead:3, t:15, type:P, set:"aguanta 15 s", instr:"Cambia de pierna. Aunque sea el día corto, <b>el equilibrio se queda</b>: es el punto débil del mes."},
+  {block:"3 · Dead hang", name:"Dead hang", lead:8, t:25, type:P, set:"aguanta 25 s", instr:"Comprueba la barra. Hombros activos, respira por la nariz."},
+  {block:"3 · Dead hang", name:"Descanso", t:15, type:R, instr:"Sacude las manos. Vamos directos al bloque."},
+  {block:"4 · Squat jumps", name:"Squat jumps", lead:3, t:10, type:W, set:"5 saltos · solo activar", instr:"Solo 5, y son <b>para activar, no para progresar</b>. Aterrizaje silencioso."},
+  {block:"4 · Squat jumps", name:"Descanso", t:20, type:R, instr:"Respira. Empieza el bloque: 1 serie de cada patrón."},
+  {block:"5 · Flexiones", name:"Flexiones · Serie única", lead:5, t:40, type:W, tempo:[3,1,1,0], set:"8 reps · tempo 3-1-1-0", instr:"Serie única: <b>el tempo es innegociable</b>. 1 serie lenta y limpia vale más que 2 aceleradas."},
+  {block:"5 · Flexiones", name:"Descanso", t:25, type:R, instr:"Afloja muñecas. Vamos a pierna."},
+  {block:"6 · Búlgara", name:"Búlgara · DERECHA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna derecha · tempo 3-2-1-0", instr:"Pie de atrás en la silla. <b>2 s de pausa abajo</b>, respirando."},
+  {block:"6 · Búlgara", name:"Búlgara · IZQUIERDA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna izquierda · tempo 3-2-1-0", instr:"Cambia de pierna. Rodilla alineada con el pie."},
+  {block:"6 · Búlgara", name:"Descanso", t:25, type:R, instr:"Estira cuádriceps rápido, 10 s cada pierna."},
+  {block:"7 · Pike push-up", name:"Pike · Serie única", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Cadera alta, coronilla al suelo. 5 reps con <b>RIR 2</b>."},
+  {block:"7 · Pike push-up", name:"Descanso", t:25, type:R, instr:"Afloja hombros y cuello."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"Cadera atrás, espalda neutra. Dos dedos en la pared si lo necesitas."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Cambia de pierna. Baja solo hasta donde controles."},
+  {block:"8 · Single-leg RDL", name:"Descanso", t:25, type:R, instr:"Estira isquios. Llega la dominada — aquí sí hay 2 series."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 1/2", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Primera rep con <b>1 s arriba, respirando</b>. Aquí mantenemos 2 series: es el patrón que estamos reprogramando y con 1 sola no entrenas el reparto."},
+  {block:"9 · Dominadas", name:"Descanso", t:45, type:R, instr:"Sacude antebrazos. <b>Última serie del bloque.</b>"},
+  {block:"9 · Dominadas", name:"Dominada · Serie 2/2", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · sin pausa", instr:"Segunda y última. <b>RIR 2</b> también hoy: sin balanceo, sin buscar el fallo."},
+  {block:"10 · Hollow body hold", name:"Hollow · Serie única", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"Lumbar pegada al suelo. Aguanta la posición, no la respiración."},
+  {block:"10 · Hollow body hold", name:"Descanso", t:15, type:R, instr:"Rodillas al pecho para aflojar lumbar."},
+  {block:"11 · Vuelta a la calma", name:"Pectoral en marco", lead:3, t:15, type:P, instr:"Antebrazo en el marco, gira el tronco."},
+  {block:"11 · Vuelta a la calma", name:"Isquiotibiales", lead:3, t:15, type:P, instr:"Talón adelante, cadera atrás. Hecho — <b>cuenta como sesión completa</b>."}
 ],
     planRows: [
-  ["Calentamiento express", "0:48"],
-  ["Dead hang", "0:43"],
-  ["Flexiones 1×6-8", "1:00"],
-  ["Búlgara 1×8/pierna", "1:48"],
-  ["Pike push-up 1×6", "0:55"],
-  ["Single-leg RDL 1×8/pierna", "1:46"],
-  ["Dominada 1×5-6", "0:52"],
-  ["Hollow body 1×20-25s", "0:27"],
+  ["Calentamiento express", "0:30"],
+  ["Apoyo unipodal", "0:36"],
+  ["Dead hang", "0:48"],
+  ["Squat jumps", "0:33"],
+  ["Flexiones", "1:10"],
+  ["Búlgara", "1:45"],
+  ["Pike push-up", "0:55"],
+  ["Single-leg RDL", "1:31"],
+  ["Dominadas", "1:35"],
+  ["Hollow body hold", "0:45"],
   ["Vuelta a la calma", "0:36"]
 ],
-    total: "8:01",
-    h1hl: "10 min",
-    lead: "Versión media: 1 serie de cada patrón, mismo tempo, calentamiento mínimo. Cuenta como sesión válida en tu hoja de 12 y no genera deuda. La regla: no recortes el tempo — es el estímulo.",
-    done: "Sesión media hecha: los 6 patrones cubiertos en ~9 min. Cuenta como sesión válida, no genera deuda. Si te sobró energía, la próxima añade una 2ª serie de dominada o flexiones."
+    total: "9:36",
+    h1hl: "12 min",
+    lead: "Día sin tiempo. No se tira ningún patrón y no se toca el tempo: se recorta solo el volumen. Cuenta como sesión válida y no genera deuda.",
+    done: "Sesión media completada. Cuenta igual en tu hoja de 13 — no la recuperes doblando otro día."
   }
 };
 
