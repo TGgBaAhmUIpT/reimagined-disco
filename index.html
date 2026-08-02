@@ -173,7 +173,7 @@
     </div>
     <p class="lead" id="leadP">El mes del reparto. Dominadas 4×4 con RIR 2: prohibido apretar la primera serie. Exhala en el esfuerzo, nunca bloquees el aire.</p>
     <div class="plan" id="planList"></div>
-    <div class="total"><span>TOTAL</span><b id="totalB">23:22</b></div>
+    <div class="total"><span>TOTAL</span><b id="totalB">23:40</b></div>
     <div class="opt" id="variantOpt">
       <span class="ttl">Versión de hoy</span>
       <div class="seg" id="variantSeg">
@@ -255,13 +255,14 @@ const HAS_SHORT = true;
 const ROUTINES = {
   long: {
     phases: [
-  {block:"1 · Calentamiento articular", name:"Cuello", t:10, type:P, instr:"Rotaciones suaves, <b>5 a cada lado</b>. Sin forzar el final del recorrido."},
-  {block:"1 · Calentamiento articular", name:"Hombros", t:10, type:P, instr:"Círculos grandes <b>hacia atrás</b>, ×8. Abre el pecho al pasar por arriba."},
-  {block:"1 · Calentamiento articular", name:"Codos y muñecas", t:10, type:P, instr:"Círculos ×8. <b>No te lo saltes</b>: es lo que prepara el agarre para la barra."},
-  {block:"1 · Calentamiento articular", name:"Columna torácica", t:10, type:P, instr:"Rotaciones de pie, <b>5 por lado</b>. Gira desde el esternón, no desde la cadera."},
-  {block:"1 · Calentamiento articular", name:"Cadera", t:10, type:P, instr:"Círculos de rodilla, <b>5 por lado</b>. Rodilla arriba y abre hacia fuera."},
-  {block:"1 · Calentamiento articular", name:"Rodillas", t:10, type:P, instr:"<b>Medias sentadillas</b> sin carga ×8. Tranquilo, es engrase, no trabajo."},
-  {block:"1 · Calentamiento articular", name:"Tobillos", t:10, type:P, instr:"Círculos ×8 por pie. Prepara el apoyo para el equilibrio que viene ahora."},
+  {block:"1 · Calentamiento articular", name:"Cuello", t:10, type:P, set:"3 a cada lado · ~2 s cada uno", instr:"Semicírculos suaves de oreja a oreja, pasando la barbilla por el pecho. <b>3 a cada lado.</b> No lleves la cabeza hacia atrás."},
+  {block:"1 · Calentamiento articular", name:"Hombros", t:10, type:P, set:"5 círculos · ~2 s cada uno", instr:"Brazos estirados, <b>5 círculos grandes hacia atrás</b>. Abre el pecho al pasar por arriba."},
+  {block:"1 · Calentamiento articular", name:"Codos", t:10, type:P, set:"5 aperturas · ~2 s cada una", instr:"Brazos al frente: <b>abre y cierra el codo por completo ×5</b>, del estirado del todo al máximo doblado. El codo no hace círculos: hace flexión y extensión."},
+  {block:"1 · Calentamiento articular", name:"Muñecas", t:10, type:P, set:"5 círculos en cada sentido", instr:"Manos entrelazadas: <b>círculos ×5 en un sentido y ×5 en el otro</b>. Esto es lo que prepara el agarre para la barra."},
+  {block:"1 · Calentamiento articular", name:"Columna torácica", t:12, type:P, set:"4 giros a cada lado", instr:"De pie (es la postura, no un ejercicio de pie). Brazos cruzados sobre el pecho: <b>gira el TRONCO 4 veces a cada lado</b>. Cadera y pies quietos mirando al frente."},
+  {block:"1 · Calentamiento articular", name:"Cadera", t:12, type:P, set:"3 círculos por pierna", instr:"Dibuja <b>círculos amplios con la rodilla, 3 por pierna</b>. La rodilla es solo el puntero, como la punta de un compás: <b>la que se mueve es la cadera</b>. Rodilla arriba, abre fuera, baja y cierra."},
+  {block:"1 · Calentamiento articular", name:"Rodillas", t:12, type:P, set:"5 medias sentadillas · ~2,5 s cada una", instr:"<b>5 medias sentadillas</b> sin carga, bajando y subiendo despacio. Es engrase, no trabajo: si vas rápido, no sirve."},
+  {block:"1 · Calentamiento articular", name:"Tobillos", t:12, type:P, set:"5 círculos por pie", instr:"Punta del pie apoyada en el suelo: <b>círculos ×5 por pie</b>. Prepara el apoyo para el equilibrio que viene ahora."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · DERECHA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Rodilla izquierda a la altura de la cadera. <b>Mirada a un punto fijo</b> a 3-4 m. Corrige con el pie, no con el tronco: reparte el peso entre dedo gordo, meñique y talón."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · IZQUIERDA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Cambia de pierna. El objetivo <b>no es quedarse quieto</b>, es recuperar rápido cuando te tambalees."},
   {block:"3 · Dead hang", name:"Dead hang", lead:8, t:30, type:P, set:"aguanta 30 s · anota los segundos", instr:"Comprueba que la barra está bien encajada. Brazos estirados del todo, agarre prono, <b>hombros activos</b> (escápulas tiran hacia abajo). Respira por la nariz."},
@@ -306,7 +307,7 @@ const ROUTINES = {
   {block:"11 · Vuelta a la calma", name:"Isquiotibiales", lead:3, t:15, type:P, instr:"Talón adelante, cadera atrás, espalda recta. Hecho. <b>El Elidel del pie, después de la ducha — nunca antes de entrenar.</b>"}
 ],
     planRows: [
-  ["Calentamiento articular", "1:10"],
+  ["Calentamiento articular", "1:28"],
   ["Apoyo unipodal", "0:46"],
   ["Dead hang", "0:58"],
   ["Squat jumps", "0:56"],
@@ -318,14 +319,14 @@ const ROUTINES = {
   ["Hollow body hold", "2:20"],
   ["Vuelta a la calma", "0:54"]
 ],
-    total: "23:22",
+    total: "23:40",
     h1hl: "25 min",
     lead: "El mes del reparto. Dominadas 4×4 con RIR 2: prohibido apretar la primera serie. Exhala en el esfuerzo, nunca bloquees el aire.",
     done: "Sesión completada. Anota los segundos del dead hang y las reps de las 4 series de dominada en la hoja de seguimiento."
   },
   short: {
     phases: [
-  {block:"1 · Calentamiento express", name:"Movilidad express", t:30, type:P, instr:"Hombros, cadera y tobillos: círculos rápidos. <b>Lo mínimo para no entrar en frío.</b>"},
+  {block:"1 · Calentamiento express", name:"Movilidad express", t:30, type:P, set:"hombros ×5 · cadera ×3/pierna · tobillos ×5/pie", instr:"<b>Hombros:</b> 5 círculos atrás. <b>Cadera:</b> 3 círculos con la rodilla por pierna. <b>Tobillos:</b> 5 círculos por pie. Lo mínimo para no entrar en frío."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · DERECHA", lead:3, t:15, type:P, set:"aguanta 15 s", instr:"Mirada a un punto fijo. Corrige con el pie, no con el tronco."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · IZQUIERDA", lead:3, t:15, type:P, set:"aguanta 15 s", instr:"Cambia de pierna. Aunque sea el día corto, <b>el equilibrio se queda</b>: es el punto débil del mes."},
   {block:"3 · Dead hang", name:"Dead hang", lead:8, t:25, type:P, set:"aguanta 25 s", instr:"Comprueba la barra. Hombros activos, respira por la nariz."},
