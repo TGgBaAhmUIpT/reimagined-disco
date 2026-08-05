@@ -139,6 +139,25 @@
   .seg button{flex:1;appearance:none;border:none;background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-weight:600;font-size:12.5px;padding:11px 5px;border-radius:10px;cursor:pointer;transition:.15s;line-height:1.15;text-align:center}
   .seg button small{display:block;font-weight:400;font-size:10px;opacity:.8;margin-top:3px}
   .seg button.sel{background:var(--work);color:#0d0f0d}
+  /* --- progresión del mes: selector de semana + toggles condicionales --- */
+  .optNote{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0 2px}
+  .optNote b{color:var(--ink)}
+  .todayLine{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink);letter-spacing:.02em}
+  .seg.wk button{padding:9px 2px;font-size:12px}
+  .seg.wk button small{font-size:9px}
+  .tgRow{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+  .tgRow + .tgRow{margin-top:8px}
+  .tgRow .sw{margin-top:2px;cursor:pointer}
+  .tgRow .tgBody{flex:1;min-width:0}
+  .tgRow .tgName{font-weight:600;font-size:13px}
+  .tgRow .tgName .st{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);margin-left:6px}
+  .tgRow .tgName .st.on{color:var(--work)}
+  .tgRow .tgWhat{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+  .tgRow .tgCrit{font-size:11.5px;margin-top:5px;line-height:1.45;color:var(--ink)}
+  .tgRow .tgCrit::before{content:"CRITERIO · ";font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:var(--prep)}
+  .tgRow.locked{opacity:.5}
+  .tgRow.locked .sw{cursor:not-allowed}
+  .tgRow .tgLock{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--prep);margin-top:5px}
 
   /* estado PREPÁRATE (avance manual) — recolorea en ámbar */
   #run.ready .timer,#run.ready .exName{color:var(--prep)}
@@ -180,6 +199,18 @@
         <button data-variant="long" class="sel"><span>Completa</span><small>~23 min</small></button>
         <button data-variant="short"><span>Media</span><small>~10 min</small></button>
       </div>
+    </div>
+    <!-- Progresión del mes: semana preseleccionada por la fecha + subidas por mérito -->
+    <div class="opt" id="weekOpt" style="display:none">
+      <span class="ttl">Semana del plan</span>
+      <div class="todayLine" id="todayLbl"></div>
+      <div class="seg wk" id="weekSeg"></div>
+      <p class="optNote" id="weekNote"></p>
+    </div>
+    <div class="opt" id="togglesOpt" style="display:none">
+      <span class="ttl">Progresiones ganadas</span>
+      <p class="optNote" id="togglesNote"></p>
+      <div id="togglesList"></div>
     </div>
     <div class="opt">
       <span class="ttl">Avance entre fases</span>
@@ -265,7 +296,7 @@ const ROUTINES = {
   {block:"1 · Calentamiento articular", name:"Tobillos", t:12, type:P, set:"5 círculos por pie", instr:"Punta del pie apoyada en el suelo: <b>círculos ×5 por pie</b>. Prepara el apoyo para el equilibrio que viene ahora."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · DERECHA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Rodilla izquierda a la altura de la cadera. <b>Mirada a un punto fijo</b> a 3-4 m. Corrige con el pie, no con el tronco: reparte el peso entre dedo gordo, meñique y talón."},
   {block:"2 · Apoyo unipodal", name:"Apoyo unipodal · IZQUIERDA", lead:3, t:20, type:P, set:"aguanta 20 s", instr:"Cambia de pierna. El objetivo <b>no es quedarse quieto</b>, es recuperar rápido cuando te tambalees."},
-  {block:"3 · Dead hang", name:"Dead hang", lead:8, t:30, type:P, set:"aguanta 30 s · anota los segundos", instr:"Comprueba que la barra está bien encajada. Brazos estirados del todo, agarre prono, <b>hombros activos</b> (escápulas tiran hacia abajo). Respira por la nariz."},
+  {block:"3 · Dead hang", name:"Dead hang", lead:8, t:30, type:P, set:"aguanta 30 s · anota los segundos", instr:"Comprueba que la barra está bien encajada. Brazos estirados del todo, agarre prono, <b>hombros activos</b> (escápulas tiran hacia abajo). Respira por la nariz.", ov:[{w:3,t:35,set:"aguanta 35 s · anota los segundos",instr:"Semana 4: <b>objetivo 35 s</b>. Barra bien encajada, agarre prono, hombros activos. Respira por la nariz y no busques el fallo del agarre."}]},
   {block:"3 · Dead hang", name:"Descanso", t:20, type:R, instr:"Sacude las manos y afloja los antebrazos. Objetivo del mes: llegar a <b>35 s</b> en la semana 4."},
   {block:"4 · Squat jumps", name:"Squat jumps · Serie 1/2", lead:3, t:10, type:W, set:"5 saltos · intención máxima", instr:"Media sentadilla y salta con intención máxima. Lo que importa no es la altura: es el <b>aterrizaje silencioso</b>, amortiguando con la cadera."},
   {block:"4 · Squat jumps", name:"Descanso", t:30, type:R, instr:"Respira y afloja los gemelos. Se mantienen en 2×5 <b>a propósito</b>: precaución de reincorporación progresiva al impacto."},
@@ -280,23 +311,23 @@ const ROUTINES = {
   {block:"6 · Búlgara", name:"Descanso", t:55, type:R, instr:"Estira el cuádriceps de las dos piernas, 20 s cada una. <b>Queda 1 serie.</b> Menos reps que en julio, pero cada una dura más: es progresión, no rebaja."},
   {block:"6 · Búlgara", name:"Búlgara · S2 · DERECHA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna derecha · tempo 3-2-1-0", instr:"Segunda y última. Mantén los <b>2 s abajo</b> aunque quemen."},
   {block:"6 · Búlgara", name:"Búlgara · S2 · IZQUIERDA", lead:4, t:36, type:W, tempo:[3,2,1,0], set:"6 reps · pierna izquierda · tempo 3-2-1-0", instr:"Última pierna. Si el tempo se rompe, para: <b>mejor 4 limpias que 6 aceleradas</b>."},
-  {block:"7 · Pike push-up", name:"Pike · Serie 1/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Cadera alta, forma de V, coronilla hacia el suelo. <b>Bajado a 5 reps a propósito</b>: en julio las 2 últimas de 6 te costaban demasiado."},
+  {block:"7 · Pike push-up", name:"Pike · Serie 1/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Cadera alta, forma de V, coronilla hacia el suelo. <b>Bajado a 5 reps a propósito</b>: en julio las 2 últimas de 6 te costaban demasiado.", ov:[{tg:"pike6",t:30,set:"6 reps · tempo 3-1-1-0",instr:"Cadera alta, forma de V, coronilla hacia el suelo. <b>Recuperadas las 6 reps</b>: te las has ganado. Mismo tempo, y sigue sin ser al fallo."}]},
   {block:"7 · Pike push-up", name:"Descanso", t:60, type:R, instr:"Afloja hombros y cuello con círculos suaves. <b>Descanso subido a 60 s</b> — es la otra mitad del arreglo. Quedan 2 series."},
-  {block:"7 · Pike push-up", name:"Pike · Serie 2/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"5 limpias con <b>RIR 2</b>. Si las 5 salen sobradas dos sesiones seguidas, en la semana 3 vuelves a 6."},
+  {block:"7 · Pike push-up", name:"Pike · Serie 2/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"5 limpias con <b>RIR 2</b>. Si las 5 salen sobradas dos sesiones seguidas, en la semana 3 vuelves a 6.", ov:[{tg:"pike6",t:30,set:"6 reps · tempo 3-1-1-0",instr:"6 limpias con <b>RIR 2</b>. Si las últimas vuelven a costarte dos sesiones seguidas, apaga el interruptor y vuelve a 5: retirarse no es fallar."}]},
   {block:"7 · Pike push-up", name:"Descanso", t:60, type:R, instr:"Estira el hombro cruzando el brazo por delante, 20 s cada lado. <b>Última serie.</b> (Regresión: menos recorrido, mismo tempo.)"},
-  {block:"7 · Pike push-up", name:"Pike · Serie 3/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Última. Si notas que <b>el hombro no llega al recorrido</b> en vez de que falta fuerza, anótalo: es un dato para el asesor."},
-  {block:"8 · Single-leg RDL", name:"SL-RDL · S1 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"La <b>cadera va atrás</b>, no el tronco abajo. Semanas 1-2: puedes apoyar <b>dos dedos</b> en la pared — para el equilibrio, no para el peso."},
+  {block:"7 · Pike push-up", name:"Pike · Serie 3/3", lead:5, t:25, type:W, tempo:[3,1,1,0], set:"5 reps · tempo 3-1-1-0", instr:"Última. Si notas que <b>el hombro no llega al recorrido</b> en vez de que falta fuerza, anótalo: es un dato para el asesor.", ov:[{tg:"pike6",t:30,set:"6 reps · tempo 3-1-1-0",instr:"Última, ya a 6. Si notas que <b>el hombro no llega al recorrido</b> en vez de que falta fuerza, anótalo: es un dato para el asesor."}]},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S1 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"La <b>cadera va atrás</b>, no el tronco abajo. Esta semana puedes apoyar <b>dos dedos</b> en la pared — para el equilibrio, no para el peso.", ov:[{w:1,instr:"La <b>cadera va atrás</b>, no el tronco abajo. <b>Ya sin apoyo</b>: si pierdes el equilibrio, apoya un momento, recoloca el pie y sigue — no cuenta como fallo."}]},
   {block:"8 · Single-leg RDL", name:"SL-RDL · S1 · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Cambia de pierna. Baja solo hasta donde <b>mantengas la espalda neutra</b>, aunque sea medio recorrido."},
   {block:"8 · Single-leg RDL", name:"Descanso", t:50, type:R, instr:"Estira isquios y afloja la cadera. <b>Queda 1 serie.</b> Anota cuántas veces perdiste el equilibrio en cada pierna."},
-  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"Segunda y última. Si estás <b>empujando la pared</b>, ya no es un single-leg RDL: suelta y baja menos."},
-  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Última pierna. A partir de la <b>semana 3, sin apoyo</b>."},
-  {block:"9 · Dominadas", name:"Dominada · Serie 1/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Primera rep: <b>1 s con la barbilla sobre la barra, respirando</b>. Luego 3 normales. <b>PROHIBIDO hacer 5 o 6</b> aunque puedas: eso es lo que te tumbaba la tercera serie."},
-  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Sacude antebrazos y afloja el agarre. <b>Quedan 3 series.</b> Este mes son 4 series cortas, no 3 largas: 16 reps limpias en vez de 15 con dos malas."},
-  {block:"9 · Dominadas", name:"Dominada · Serie 2/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Otra vez pausa de <b>1 s arriba</b> en la primera rep. Sin kipping: si la barra se mueve, frenas y reasientas."},
-  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Cuelga los brazos y respira hondo. <b>Quedan 2 series.</b> Series 3 y 4 ya sin pausa arriba."},
-  {block:"9 · Dominadas", name:"Dominada · Serie 3/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · sin pausa", instr:"Sin pausa arriba. <b>Barbilla sobre la barra</b> arriba, <b>brazos estirados</b> abajo. Si solo salen 3 limpias, paras en 3."},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · DERECHA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna derecha · tempo 3-1-1-0", instr:"Segunda y última. Si estás <b>empujando la pared</b>, ya no es un single-leg RDL: suelta y baja menos.", ov:[{w:1,instr:"Segunda y última, <b>sin apoyo</b>: mirada al punto fijo y pie agarrando el suelo en tres puntos."}]},
+  {block:"8 · Single-leg RDL", name:"SL-RDL · S2 · IZQUIERDA", lead:3, t:30, type:W, tempo:[3,1,1,0], set:"6 reps · pierna izquierda · tempo 3-1-1-0", instr:"Última pierna. El apoyo de dos dedos es de estas primeras semanas: <b>desde la semana 2 se entrena sin él</b>."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 1/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Primera rep: <b>1 s con la barbilla sobre la barra, respirando</b>. Luego 3 normales. <b>PROHIBIDO hacer más</b> aunque puedas: eso es lo que te tumbaba la tercera serie.", ov:[{tg:"dom45",t:21,set:"5 reps · RIR 2 · pausa 1 s arriba en la 1ª",instr:"Ya a 5: <b>te lo has ganado</b>. Primera rep con 1 s arriba, respirando; luego 4 normales. <b>PROHIBIDO hacer 6</b>: la regla no cambia."}]},
+  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Sacude antebrazos y afloja el agarre. <b>Quedan 3 series.</b> Este mes son 4 series cortas, no 3 largas: todas limpias, ninguna al límite."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 2/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · pausa 1 s arriba en la 1ª", instr:"Otra vez pausa de <b>1 s arriba</b> en la primera rep. Sin kipping: si la barra se mueve, frenas y reasientas.", ov:[{tg:"dom45",t:21,set:"5 reps · RIR 2 · pausa 1 s arriba en la 1ª",instr:"5 reps, pausa de <b>1 s arriba</b> en la primera. Sin kipping: si la barra se mueve, frenas y reasientas."}]},
+  {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Cuelga los brazos y respira hondo. <b>Quedan 2 series.</b>"},
+  {block:"9 · Dominadas", name:"Dominada · Serie 3/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2", instr:"Sin pausa arriba. <b>Barbilla sobre la barra</b> arriba, <b>brazos estirados</b> abajo. Si solo salen 3 limpias, paras en 3.", ov:[{w:3,instr:"Semana 4: esta serie también lleva <b>pausa de 1 s arriba en la 1ª rep</b>, respirando. Barbilla sobre la barra arriba, brazos estirados abajo."},{tg:"dom45",t:21,set:"5 reps · RIR 2"}]},
   {block:"9 · Dominadas", name:"Descanso", t:60, type:R, instr:"Estira antebrazos y dorsal. <b>Última serie — y es la que mide el mes.</b> Si sale igual de limpia que la primera, has hecho el mes perfecto."},
-  {block:"9 · Dominadas", name:"Dominada · Serie 4/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2 · sin pausa", instr:"La serie clave. Si se te cae, la señal <b>no</b> es apretar más: es que las tres primeras iban demasiado al límite. Anota las reps reales de las 4 series."},
+  {block:"9 · Dominadas", name:"Dominada · Serie 4/4", lead:8, t:17, type:W, tempo:[2,0,2,0], set:"4 reps · RIR 2", instr:"La serie clave, sin pausa. Si se te cae, la señal <b>no</b> es apretar más: es que las tres primeras iban demasiado al límite. Anota las reps reales de las 4 series.", ov:[{tg:"dom45",t:21,set:"5 reps · RIR 2",instr:"La serie clave, sin pausa, ya a 5. Si se te cae dos sesiones seguidas, <b>apaga el interruptor y vuelve a 4×4</b>: retirarse no es fallar. Anota las reps reales."}]},
   {block:"10 · Hollow body hold", name:"Hollow · Serie 1/3", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"Lumbar <b>pegada al suelo</b>, brazos y piernas estirados. Si la espalda se despega, sube las rodillas."},
   {block:"10 · Hollow body hold", name:"Descanso", t:25, type:R, instr:"Rodillas al pecho y balancéate suave para aflojar lumbar. <b>Quedan 2.</b>"},
   {block:"10 · Hollow body hold", name:"Hollow · Serie 2/3", lead:5, t:25, type:W, set:"aguanta 25 s", instr:"25 s. Respira <b>sin soltar la tensión</b> del abdomen — y sin bloquear el aire."},
@@ -370,6 +401,17 @@ const ROUTINES = {
     done: "Sesión media completada. Cuenta igual en tu hoja de 13 — no la recuperes doblando otro día."
   }
 };
+
+/* ---- Progresión del mes (opcional) ----
+   weeks: rangos de fechas -> la fecha de HOY preselecciona la semana.
+   toggles: subidas por mérito que el usuario activa a mano.
+   Las fases llevan overrides `ov`: {w:N,...} se aplica si la semana elegida
+   es >= N; {tg:"id",...} se aplica si ese toggle está activado. */
+const PROGRESSION = {"note": "Cada interruptor es una subida que hay que <b>ganarse entrenando</b> — no llega con la fecha. Actívalo solo si cumples el criterio que tiene debajo; ante la duda, déjalo apagado. Son independientes: puedes ganarte uno y el otro no. Solo afectan a la versión completa (la media es de mantenimiento y no progresa).", "weeks": [{"id": "s1", "label": "Semana 1", "from": "2026-08-03", "to": "2026-08-09", "desc": "Asentar los formatos nuevos: dominada 4×4, pike 3×5, búlgara con pausa de 2 s, SL-RDL con apoyo de dos dedos, dead hang 30 s."}, {"id": "s2", "label": "Semana 2", "from": "2026-08-10", "to": "2026-08-16", "desc": "El SL-RDL pasa a hacerse sin apoyo (si aún lo necesitas puntualmente, úsalo: es para el equilibrio, no para el peso). Lo demás, igual."}, {"id": "s3", "label": "Semana 3", "from": "2026-08-17", "to": "2026-08-23", "desc": "Se desbloquean los dos interruptores de abajo (dominada 4×5 y pike 3×6). Solo se activan si te los has ganado — mira su criterio."}, {"id": "s4", "label": "Semana 4", "from": "2026-08-24", "to": "2026-08-31", "desc": "El dead hang sube a 35 s y la dominada lleva pausa de 1 s arriba también en la 3ª serie."}], "toggles": [{"id": "dom45", "label": "Dominada: de 4×4 a 4×5", "what": "ACTIVADA → las 4 series pasan de 4 a 5 repeticiones (descansos iguales). APAGADA → sigues en 4×4.", "criterion": "Las 4 series de 4 salieron limpias con RIR 2 en 2 sesiones seguidas — la 4ª tan limpia como la 1ª. Si la 4ª todavía se cae, no toca.", "w_from": 2}, {"id": "pike6", "label": "Pike push-up: de 3×5 a 3×6", "what": "ACTIVADA → las 3 series pasan de 5 a 6 repeticiones. APAGADA → sigues en 3×5.", "criterion": "Las 3×5 dejaron de costarte — las últimas reps salen sin pelearlas — durante 2 sesiones seguidas.", "w_from": 2}]};
+let weekIdx = 0;
+let toggleState = {};
+/* fases base tal como llegan del build (nunca se mutan) */
+const BASES = {long: ROUTINES.long.phases, short: ROUTINES.short.phases};
 
 /* etiqueta de fase visible */
 const phaseLabel = {work:'TRABAJO', rest:'DESCANSO', prep:'PREPARA'};
@@ -643,6 +685,104 @@ function goto(i){
   else{elPlayIcon.innerHTML=ICON_PLAY;elPlayLab.textContent='SIGUE';elPhaseTag.textContent=phaseLabel[phases[idx].type];}
 }
 
+/* ============ PROGRESIÓN DEL MES ============ */
+function esDate(d){
+  const dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]}`;
+}
+function shortRange(w){
+  const f=new Date(w.from+'T00:00:00'), t=new Date(w.to+'T00:00:00');
+  return `${f.getDate()}–${t.getDate()}`;
+}
+/* aplica a las fases base los overrides de la semana elegida y de los toggles activos */
+function computePhases(base){
+  return base.map(p=>{
+    if(!p.ov) return p;
+    const q=Object.assign({},p);
+    p.ov.forEach(o=>{
+      const hit = (o.w!=null) ? (weekIdx>=o.w) : (o.tg && toggleState[o.tg]);
+      if(!hit) return;
+      ['t','set','instr','name','tempo'].forEach(k=>{ if(o[k]!==undefined) q[k]=o[k]; });
+    });
+    return q;
+  });
+}
+function autoPlanJS(ph){
+  const order=[],tot={};
+  ph.forEach(p=>{ if(!(p.block in tot)){order.push(p.block);tot[p.block]=0;} tot[p.block]+=p.t+(p.lead||0); });
+  return order.map(b=>[b.replace(/^\s*\d+\s*·\s*/,''), fmt(tot[b])]);
+}
+function applyProgression(){
+  if(!PROGRESSION) return;
+  ['long','short'].forEach(v=>{
+    const ph=computePhases(BASES[v]);
+    ROUTINES[v].phases=ph;
+    ROUTINES[v].planRows=autoPlanJS(ph);
+    ROUTINES[v].total=fmt(ph.reduce((a,p)=>a+p.t,0));
+  });
+  applyVariant(variant);
+}
+function renderToggles(){
+  if(!PROGRESSION || !PROGRESSION.toggles || !PROGRESSION.toggles.length) return;
+  const list=$('togglesList'); list.innerHTML='';
+  PROGRESSION.toggles.forEach(t=>{
+    const locked = weekIdx < t.w_from;
+    if(locked) toggleState[t.id]=false;
+    const on = !!toggleState[t.id];
+    const row=document.createElement('div');
+    row.className='tgRow'+(locked?' locked':'');
+    row.innerHTML=
+      `<span class="sw${on?' on':''}"></span>`+
+      `<div class="tgBody">`+
+        `<div class="tgName">${t.label}<span class="st${on?' on':''}">${on?'ACTIVADA':'APAGADA'}</span></div>`+
+        `<div class="tgWhat">${t.what}</div>`+
+        (locked
+          ? `<div class="tgLock">🔒 Se desbloquea en la ${PROGRESSION.weeks[t.w_from].label.toLowerCase()}</div>`
+          : `<div class="tgCrit">${t.criterion}</div>`)+
+      `</div>`;
+    row.onclick=()=>{
+      if(locked) return;
+      toggleState[t.id]=!toggleState[t.id];
+      renderToggles(); applyProgression();
+    };
+    list.appendChild(row);
+  });
+}
+function renderWeeks(){
+  const seg=$('weekSeg'); seg.innerHTML='';
+  PROGRESSION.weeks.forEach((w,i)=>{
+    const b=document.createElement('button');
+    b.innerHTML=`<span>${w.label}</span><small>${shortRange(w)}</small>`;
+    b.classList.toggle('sel',i===weekIdx);
+    b.onclick=()=>{ weekIdx=i; renderWeeks(); renderToggles(); applyProgression(); updateWeekNote(false); };
+    seg.appendChild(b);
+  });
+}
+function updateWeekNote(autoPicked){
+  const w=PROGRESSION.weeks[weekIdx];
+  $('weekNote').innerHTML=(autoPicked
+    ? `<b>Preseleccionada por la fecha de hoy.</b> Confirma que te cuadra; cámbiala solo si vas por delante o por detrás del calendario. `
+    : `<b>Semana cambiada a mano.</b> `) + (w.desc||'');
+}
+function initProgression(){
+  if(!PROGRESSION || !PROGRESSION.weeks || !PROGRESSION.weeks.length) return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  $('todayLbl').textContent='HOY ES '+esDate(today).toUpperCase();
+  const ws=PROGRESSION.weeks;
+  weekIdx=0;
+  if(today>new Date(ws[ws.length-1].to+'T23:59:59')) weekIdx=ws.length-1;
+  ws.forEach((w,i)=>{
+    if(today>=new Date(w.from+'T00:00:00') && today<=new Date(w.to+'T23:59:59')) weekIdx=i;
+  });
+  $('weekOpt').style.display='flex';
+  if(PROGRESSION.toggles && PROGRESSION.toggles.length){
+    $('togglesOpt').style.display='flex';
+    $('togglesNote').innerHTML=PROGRESSION.note||'Actívalas <b>solo</b> si cumples el criterio. Ante la duda, déjalas apagadas.';
+  }
+  renderWeeks(); renderToggles(); updateWeekNote(true); applyProgression();
+}
+
 /* cambia entre versión completa y media: recarga fases, plan, textos y total */
 function applyVariant(v){
   variant = (v==='short' && HAS_SHORT) ? 'short' : 'long';
@@ -772,6 +912,7 @@ $('goBtn').addEventListener('click',keepAwake);
 $('restartBtn').addEventListener('click',keepAwake);
 
 if(!HAS_SHORT){ const vo=$('variantOpt'); if(vo) vo.style.display='none'; }
+initProgression();
 applyVariant('long');
 render();
 </script>
